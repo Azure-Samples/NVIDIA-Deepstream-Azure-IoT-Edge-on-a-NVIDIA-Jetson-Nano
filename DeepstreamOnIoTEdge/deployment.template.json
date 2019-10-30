@@ -1,0 +1,101 @@
+{
+  "$schema-template": "1.0.0",
+  "modulesContent": {
+    "$edgeAgent": {
+      "properties.desired": {
+        "schemaVersion": "1.0",
+        "runtime": {
+          "type": "docker",
+          "settings": {
+            "minDockerVersion": "v1.25",
+            "loggingOptions": ""
+          }
+        },
+        "systemModules": {
+          "edgeAgent": {
+            "type": "docker",
+            "settings": {
+              "image": "mcr.microsoft.com/azureiotedge-agent:1.0",
+              "createOptions": {}
+            }
+          },
+          "edgeHub": {
+            "type": "docker",
+            "status": "running",
+            "restartPolicy": "always",
+            "settings": {
+              "image": "mcr.microsoft.com/azureiotedge-hub:1.0",
+              "createOptions": {
+                "HostConfig": {
+                  "PortBindings": {
+                    "5671/tcp": [
+                      {
+                        "HostPort": "5671"
+                      }
+                    ],
+                    "8883/tcp": [
+                      {
+                        "HostPort": "8883"
+                      }
+                    ],
+                    "443/tcp": [
+                      {
+                        "HostPort": "443"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "modules": {
+          "NVIDIADeepStreamSDK": {
+            "version": "1.0",
+            "type": "docker",
+            "status": "running",
+            "restartPolicy": "always",
+            "env": {
+              "DISPLAY":{
+                "value": ":0"
+              }
+            },
+            "settings": {
+              "image": "marketplace.azurecr.io/nvidia/deepstream-iot-l4t:latest",
+              "createOptions": {
+                "HostConfig": {
+                  "runtime": "nvidia",
+                  "Binds": [
+                    "/var/deepstream/custom_configs:/root/deepstream_sdk_v4.0.1_jetson/sources/apps/sample_apps/deepstream-test5/custom_configs/",
+                    "/var/deepstream/custom_streams/sampleStreams:/root/deepstream_sdk_v4.0.1_jetson/sources/apps/sample_apps/deepstream-test5/custom_streams/",
+                    "/var/deepstream/custom_models/:/root/deepstream_sdk_v4.0.1_jetson/sources/apps/sample_apps/deepstream-test5/custom_models/",
+                    "/tmp/.X11-unix/:/tmp/.X11-unix"
+                  ],
+                  "NetworkMode": "host"
+                },
+                "NetworkingConfig": {
+                  "EndpointsConfig": {
+                    "host": {}
+                  }
+                },
+                "WorkingDir": "/root/deepstream_sdk_v4.0.1_jetson/sources/apps/sample_apps/deepstream-test5/custom_configs/",
+                "Entrypoint": ["/usr/bin/deepstream-test5-app","-c","test5_config_file_src_infer_azure_iotedge_edited.txt"]
+              }
+          }
+        }
+      }
+    }
+  },
+    "$edgeHub": {
+      "properties.desired": {
+        "schemaVersion": "1.0",
+        "routes": {
+          "deepstreamToIoTHub": "FROM /messages/modules/NVIDIADeepStreamSDK/outputs/* INTO $upstream"
+        },
+        "storeAndForwardConfiguration": {
+          "timeToLiveSecs": 7200
+        }
+      }
+    }
+  }
+}
