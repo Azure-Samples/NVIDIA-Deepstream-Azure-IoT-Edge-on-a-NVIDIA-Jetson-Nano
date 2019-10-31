@@ -39,14 +39,14 @@ In VS Code, from your development machine:
     2. Select `Azure IoT Edge: New IoT Edge Solution`
     3. Select a parent folder
     4. Give it a name.
-    5. Select `Empty template`
-
+    5. Select `Empty Solution` (if prompted, accept to install iotedgehubdev)
+	
 2. Add the deepstream module to your solution:
     1. Open the command palette (Ctrl+Shift+P)
     2. Select `Azure IoT Edge: Add IoT Edge module`
     3. Select the default deployment manifest (deployment.template.json)
     4. Select `Module from Azure Marketplace`.
-    5. It opens a new tab with all IoT Edge module offers from the Azure Marketplace. Select the `Nvidia Deepstream` one, select the ARM64 plan (Jetson) and select the `latest` tag.
+    5. It opens a new tab with all IoT Edge module offers from the Azure Marketplace. Select the `Nvidia Deepstream SDK` one, select the NVIDIA DeapStream SDK 4.x.x for Jetson plan (Jetson) and select the `latest` tag.
 
 ![Deepsteam in Azure Marketplace](./DeepstreamInMarketplace.png "NVIDIA Deepstream in Azure Marketplace")
 
