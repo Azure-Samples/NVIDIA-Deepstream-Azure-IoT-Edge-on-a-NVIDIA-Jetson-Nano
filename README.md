@@ -10,13 +10,13 @@ products:
 
 # NVIDIA Deepstream + Azure IoT Edge on a NVIDIA Jetson Nano
 
-This is a sample showing how to do real-time video analytics with [NVIDIA Deepstream](https://developer.nvidia.com/deepstream-sdk) on a [NVIDIA Jetson Nano device](https://developer.nvidia.com/embedded/buy/jetson-nano-devkit) connected to Azure via [Azure IoT Edge](https://azure.microsoft.com/en-us/services/iot-edge/). Deepstream is an highly-optimized video processing pipeline, capable of running deep neural networks. It is a must-have tool whenever you have complex video analytics requirements like real-time or with cascading AI models. IoT Edge gives you the possibility to run this pipeline next to your cameras, where the video data is being generated, thus lowering your bandwitch costs and enabling scenarios with poor internet connectivity or privacy concerns. With this solution, you can transform cameras into sensors to know when there is an available parking spot, a missing product on a retail store shelf, an anomaly on a solar panel, a worker approaching a hazardous zone., etc.
+This is a sample showing how to do real-time video analytics with [NVIDIA Deepstream](https://developer.nvidia.com/Deepstream-sdk) on a [NVIDIA Jetson Nano device](https://developer.nvidia.com/embedded/buy/jetson-nano-devkit) connected to Azure via [Azure IoT Edge](https://azure.microsoft.com/en-us/services/iot-edge/). Deepstream is a highly-optimized video processing pipeline, capable of running deep neural networks. It is a must-have tool whenever you have complex video analytics requirements, whether its real-time or with cascading AI models. IoT Edge gives you the possibility to run this pipeline next to your cameras, where the video data is being generated, thus lowering your bandwitch costs and enabling scenarios with poor internet connectivity or privacy concerns. With this solution, you can transform cameras into sensors to know when there is an available parking spot, a missing product on a retail store shelf, an anomaly on a solar panel, a worker approaching a hazardous zone, etc.
 
-To complete this sample, you need a NVIDIA Jetson Nano. This device is powerful enough to process 8 video streams at a resolution of 1080p, 30 frames-per-second with a resnet10 model and compatible with IoT Edge. If you need to process more video streams, the same code work with more powerful NVIDIA Jetson devices like the [TX2](https://developer.nvidia.com/embedded/buy/jetson-tx2) or the [Xavier](https://developer.nvidia.com/embedded/buy/jetson-agx-xavier-devkit), and with server-class appliances that includes [NVIDIA T4](https://www.nvidia.com/en-us/data-center/tesla-t4/) or other NVIDIA Tesla GPUs.
+To complete this sample, you need a [NVIDIA Jetson Nano device](https://developer.nvidia.com/embedded/buy/jetson-nano-devkit). This device is powerful enough to process 8 video streams at a resolution of 1080p, 30 frames-per-second with a resnet10 model and is compatible with IoT Edge. If you need to process more video streams, the same code works with more powerful NVIDIA Jetson devices like the [TX2](https://developer.nvidia.com/embedded/buy/jetson-tx2) or the [Xavier](https://developer.nvidia.com/embedded/buy/jetson-agx-xavier-devkit), and with server-class appliances that includes [NVIDIA T4](https://www.nvidia.com/en-us/data-center/tesla-t4/) or other NVIDIA Tesla GPUs.
 
 ## Prerequisites
 
-- **Hardware**: Have an [NVIDIA Jetson Nano device](https://developer.nvidia.com/embedded/buy/jetson-nano-devkit) ideally with a [5V-4A barrel jack power supply like this one](https://www.adafruit.com/product/1466), which requires a jumper cable (such as [these ones](https://www.amazon.com/120pcs-Multicolor-Jumper-Arduino-Raspberry/dp/B01BAXKDN4/ref=asc_df_B01BAXKDN4/?tag=hyprod-20&linkCode=df0&hvadid=198075247191&hvpos=1o1&hvnetw=g&hvrand=12715964868364075974&hvpone=&hvptwo=&hvqmt=&hvdev=c&hvdvcmdl=&hvlocint=&hvlocphy=9033288&hvtargid=pla-317965496827&psc=1)) on pins J48. See the [Power Guide section of the Jetson Nano Developer Kit](https://developer.nvidia.com/embedded/dlc/jetson-nano-dev-kit-user-guide) for more details. Alternatively, a 5V-2.5A Micro-USB power supply will work without jumper cable but may limit the performances of your Deepstream application. In all cases, please make sure to use the default `Max` power source mode (e.g. 10W). To visualize the video feeds, you'll need a HDMI monitor and cable connected to your NVIDIA Jetson Nano.
+- **Hardware**: You need a [NVIDIA Jetson Nano device](https://developer.nvidia.com/embedded/buy/jetson-nano-devkit) ideally with a [5V-4A barrel jack power supply like this one](https://www.adafruit.com/product/1466), which requires a jumper cable (such as [these ones](https://www.amazon.com/120pcs-Multicolor-Jumper-Arduino-Raspberry/dp/B01BAXKDN4/ref=asc_df_B01BAXKDN4/?tag=hyprod-20&linkCode=df0&hvadid=198075247191&hvpos=1o1&hvnetw=g&hvrand=12715964868364075974&hvpone=&hvptwo=&hvqmt=&hvdev=c&hvdvcmdl=&hvlocint=&hvlocphy=9033288&hvtargid=pla-317965496827&psc=1)) on pins J48. See the [Power Guide section of the Jetson Nano Developer Kit](https://developer.nvidia.com/embedded/dlc/jetson-nano-dev-kit-user-guide) for more details. Alternatively, a 5V-2.5A Micro-USB power supply will work without a jumper cable but may limit the performance of your Deepstream application. In all cases, please make sure to use the default `Max` power source mode (e.g. 10W). To visualize the video feeds, you'll need an HDMI monitor and cable connected to your NVIDIA Jetson Nano.
 - **Install Jetson Nano base image**: [install its base image](https://developer.nvidia.com/embedded/learn/get-started-jetson-nano-devkit). It is based on Ubuntu 18.04 and already includes NVIDIA drivers version > 418, CUDA and Nvidia-Docker.
 - **Verify that NVIDIA docker is already installed**:  Run `nvidia-docker --help` to verify that you have nvidia-docker already installed
 - **Install IoT Edge**: See the [Azure IoT Edge installation instructions](https://docs.microsoft.com/en-us/azure/iot-edge/how-to-install-iot-edge-linux) for Ubuntu Server 18.04. Skip the Install Container Runtime section since we will be using nvidia-docker, which is already installed. Connect your device to your IoT Hub using the manual provisioning option. See this [quickstart](https://docs.microsoft.com/en-us/azure/iot-edge/quickstart-linux) if you don't yet have an Azure IoT Hub.
@@ -24,13 +24,13 @@ To complete this sample, you need a NVIDIA Jetson Nano. This device is powerful 
 
 ![Jetson Nano](./JetsonNano.png "NVIDIA Jetson Nano device used to run Deepstream with IoT Edge")
 
-The next sections walk you step-by-step to deploy Deepstream on an IoT Edge device and update its configuration. It explains concepts along the way. If all you want is to see the 8 video streams being processed in parallel, you can jump right to the final demo by directly deploying the deployment manifest in this repo.
+The next sections walks you step-by-step to deploy Deepstream on an IoT Edge device and update its configuration. It explains concepts along the way. If all you want is to see the 8 video streams being processed in parallel, you can jump right to the final demo by directly deploying the deployment manifest in this repo.
 
 ## Deploy Deepstream from the Azure Marketplace
 
 We'll start by creating a new IoT Edge solution in VS Code, add the Deepstream module from the marketplace and deploy that to our Jetson Nano.
 
-Note that you could also find Deepstream module's via the [Azure Marketplace website here](http://aka.ms/iot-edge-marketplace). You'll use VS code here since Deepstream is a SDK and typically needs to be tweaked or connected to custom modules to deliver an end-to-end solutions at the edge.
+Note that you could also find Deepstream's module via the [Azure Marketplace website here](https://azuremarketplace.microsoft.com/en-us/marketplace/apps/nvidia.deepstream-iot). You'll use VS code here since Deepstream is an SDK and typically needs to be tweaked or connected to custom modules to deliver an end-to-end solution at the edge.
 
 In VS Code, from your development machine:
 
@@ -41,7 +41,7 @@ In VS Code, from your development machine:
     4. Give it a name.
     5. Select `Empty Solution` (if prompted, accept to install iotedgehubdev)
 	
-2. Add the deepstream module to your solution:
+2. Add the Deepstream module to your solution:
     1. Open the command palette (Ctrl+Shift+P)
     2. Select `Azure IoT Edge: Add IoT Edge module`
     3. Select the default deployment manifest (deployment.template.json)
@@ -59,7 +59,7 @@ In VS Code, from your development machine:
     1. Right-click on your device (bottom left corner)
     2. Select `Start Monitoring Built-In Event Endpoint`
 
-At this point, you should be able to see messages sent by the deepstream module to the cloud via the IoT Edge runtime in VS Code. These messages are the results of Deepstream processing a sample video and analyzing it with an sample AI model that detects people and cars in this video and sends a message for each object found.
+At this point, you should be able to see messages sent by the Deepstream module to the cloud via the IoT Edge runtime in VS Code. These messages are the results of Deepstream processing a sample video and analyzing it with an sample AI model that detects people and cars in this video and sends a message for each object found.
 
 ![Telemetry sent to IoT Hub](./Telemetry.png "Messages sent from Deepstream module to Azure IoT Hub via the IoT Edge runtime")
 
@@ -70,7 +70,7 @@ We'll now modify the configuration of the Deepstream application and the IoT Edg
 > [!WARNING]
 > Today, Deepstream can output an RTSP stream from a container on Tesla platforms but not on Jetson platforms. This is an improvement that the Jetson team is looking at. Because of this limitation, we will leverage a X11 server in the rest of this sample.
 
-1. Create your updated deepstream config file on your Nano device:
+1. Create your updated Deepstream config file on your Nano device:
     a. Open an SSH connection on your Nano device (for instance from VS Code terminal):
     
     ```cmd
@@ -81,20 +81,20 @@ We'll now modify the configuration of the Deepstream application and the IoT Edg
 
     ```bash
     cd /var
-    sudo mkdir deepstream
-    sudo chmod -R 777 ./deepstream
-    mkdir ./deepstream/custom_configs
-    cd ./deepstream/custom_configs
+    sudo mkdir Deepstream
+    sudo chmod -R 777 ./Deepstream
+    mkdir ./Deepstream/custom_configs
+    cd ./Deepstream/custom_configs
     ```
 
-    3. Use your favourite text editor to create a copy of the sample deepstream configuration file:
+    3. Use your favorite text editor to create a copy of the sample Deepstream configuration file:
          - Create and open a new file:
 
         ```bash
         nano test5_config_file_src_infer_azure_iotedge_edited.txt
         ```
 
-        - Copy the content of the original deepstream configuration file which you can find in this repo under `test5_config_file_src_infer_azure_iotedge.txt`
+        - Copy the content of the original Deepstream configuration file which you can find in this repo under `test5_config_file_src_infer_azure_iotedge.txt`
 
     4. Edit the configuration file:
         - Edit the first sink to be an EglSink instead of FakeSink:
@@ -124,23 +124,23 @@ We'll now modify the configuration of the Deepstream application and the IoT Edg
 
         - Save and Quit (CTRL+O, CTRL+X)
 
-2. Mount your updated config file in Deepstream module by adding its createOptions in the `deployment.template.json` file from your development's machine:
+2. Mount your updated config file in the Deepstream module by adding its createOptions in the `deployment.template.json` file from your development's machine:
     - Add the following to your Deepstream createOptions:
 
     ```json
     "HostConfig":{
-        "Binds": ["/var/deepstream/custom_configs:/root/deepstream_sdk_v4.0.1_jetson/sources/apps/sample_apps/deepstream-test5/custom_configs/"]
+        "Binds": ["/var/Deepstream/custom_configs:/root/Deepstream_sdk_v4.0.1_jetson/sources/apps/sample_apps/Deepstream-test5/custom_configs/"]
         }
     ```
 
     - Edit your Deepstream application workigng directory and entrypoint to use this updated config file via Deepstream createOptions:
     
     ```json
-    "WorkingDir": "/root/deepstream_sdk_v4.0.1_jetson/sources/apps/sample_apps/deepstream-test5/custom_configs/"
+    "WorkingDir": "/root/Deepstream_sdk_v4.0.1_jetson/sources/apps/sample_apps/Deepstream-test5/custom_configs/"
     ```
 
     ```json
-    "Entrypoint":["/usr/bin/deepstream-test5-app","-c","test5_config_file_src_infer_azure_iotedge_edited.txt"]
+    "Entrypoint":["/usr/bin/Deepstream-test5-app","-c","test5_config_file_src_infer_azure_iotedge_edited.txt"]
     ```
  
 3. Provide Deepstream module access to X11 server from the container by adding the createOptions:
@@ -167,7 +167,7 @@ We'll now modify the configuration of the Deepstream application and the IoT Edg
     "HostConfig": {
         "runtime": "nvidia",
         "Binds": [
-        "/var/deepstream/custom_configs:/root/deepstream_sdk_v4.0.1_jetson/sources/apps/sample_apps/deepstream-test5/custom_configs/",
+        "/var/Deepstream/custom_configs:/root/Deepstream_sdk_v4.0.1_jetson/sources/apps/sample_apps/Deepstream-test5/custom_configs/",
         "/tmp/.X11-unix/:/tmp/.X11-unix"
         ],
         "NetworkMode": "host"
@@ -199,16 +199,16 @@ You should now see messages recevied by IoT Hub via in VS Code AND see the proce
 
 We'll now update Deepstream's configuration to process 8 video streams concurrently (1080p 30fps).
 
-We'll start by updating the batch-size to 8 instead of 4 (`primagy-gie` / `batch-size` property). Then because Tthe Jetson Nano isn't capable of doing inferences on 240 frames per second with a ResNet10 model, we will instead run inferences every 5 frames (`primagy-gie` / `interval` property) and use Deepstream's built-in tracking algorithm for in-between frames, which is less computationnally intensive (`tracker` group). We'll also use a slightly lower inference resolution (defined via `primagy-gie` / `config-file` property). These changes are captured in the deepstream configuration file below specific to Nano.
+We'll start by updating the batch-size to 8 instead of 4 (`primagy-gie` / `batch-size` property). Then because Tthe Jetson Nano isn't capable of doing inferences on 240 frames per second with a ResNet10 model, we will instead run inferences every 5 frames (`primagy-gie` / `interval` property) and use Deepstream's built-in tracking algorithm for in-between frames, which is less computationnally intensive (`tracker` group). We'll also use a slightly lower inference resolution (defined via `primagy-gie` / `config-file` property). These changes are captured in the Deepstream configuration file below specific to Nano.
 
-1. Update your previously edited deepstream config file:
+1. Update your previously edited Deepstream config file:
     - Open your previous config file:
 
     ```bash
     nano test5_config_file_src_infer_azure_iotedge_edited.txt
     ```
 
-    - Copy the content of deepstream's configuration file named `test5_config_file_src_infer_azure_iotedge_nano_8sources.txt` from this repo
+    - Copy the content of Deepstream's configuration file named `test5_config_file_src_infer_azure_iotedge_nano_8sources.txt` from this repo
 
     - Save and Quit (CTRL+O, CTRL+X)
 
@@ -222,7 +222,7 @@ We'll start by updating the batch-size to 8 instead of 4 (`primagy-gie` / `batch
     - Host these video files on your local disk
 
     ```bash
-    cd /var/deepstream
+    cd /var/Deepstream
     mkdir custom_streams
     cd ./custom_streams
     ```
@@ -243,8 +243,8 @@ We'll start by updating the batch-size to 8 instead of 4 (`primagy-gie` / `batch
 
     ```json
     "Binds": [
-            "/var/deepstream/custom_configs:/root/deepstream_sdk_v4.0.1_jetson/sources/apps/sample_apps/deepstream-test5/custom_configs/",
-            "/var/deepstream/custom_streams/sampleStreams:/root/deepstream_sdk_v4.0.1_jetson/sources/apps/sample_apps/deepstream-test5/custom_streams/",
+            "/var/Deepstream/custom_configs:/root/Deepstream_sdk_v4.0.1_jetson/sources/apps/sample_apps/Deepstream-test5/custom_configs/",
+            "/var/Deepstream/custom_streams/sampleStreams:/root/Deepstream_sdk_v4.0.1_jetson/sources/apps/sample_apps/Deepstream-test5/custom_streams/",
             "/tmp/.X11-unix/:/tmp/.X11-unix"
             ]
     ```
@@ -265,11 +265,11 @@ You should now see the 8 video streams being processed and displayed on your scr
 
 ### Learning more about Deepstream
 
-Deesptream is a SDK based on GStreamer. It is very modular with its concepts of plugins. Each plugins having `sinks` and `sources`. NVIDIA provides several plugins as part of Deepstream which optimized to leverage NVIDIA's GPUs. How these plugins are connected with each others in defined in the application's  configuration file.
+Deesptream's SDK based on GStreamer. It is very modular with its concepts of plugins. Each plugins has `sinks` and `sources`. NVIDIA provides several plugins as part of Deepstream which are optimized to leverage NVIDIA's GPUs. How these plugins are connected with each others is defined in the application's  configuration file.
 
-You can learn more about its architecture in [NVIDIA's official documentation](https://docs.nvidia.com/metropolis/deepstream/dev-guide/index.html#page/DeepStream_Development_Guide%2Fdeepstream_app_architecture.html) (sneak peak below).
+You can learn more about its architecture in [NVIDIA's official documentation](https://docs.nvidia.com/metropolis/Deepstream/dev-guide/index.html#page/DeepStream_Development_Guide%2FDeepstream_app_architecture.html) (sneak peak below).
 
-![NVIDIA Deepstream Application Architecture](https://docs.nvidia.com/metropolis/deepstream/dev-guide/DeepStream_Development_Guide/images/image4.png)
+![NVIDIA Deepstream Application Architecture](https://docs.nvidia.com/metropolis/Deepstream/dev-guide/DeepStream_Development_Guide/images/image4.png)
 
 ### Tips to edit your Deepstream application
 
@@ -277,7 +277,7 @@ You can learn more about its architecture in [NVIDIA's official documentation](h
 
 To quickly change a value in your config file, leverage the fact that it is being mounted from a local file so all you have to do is (for instance via an ssh terminal):
 
-1. Open your config file (in `/var/deepstream/custom_configs` in this sample)
+1. Open your config file (in `/var/Deepstream/custom_configs` in this sample)
 2. Make your changes and save
 3. Restart Deepstream container
 
@@ -285,7 +285,7 @@ To quickly change a value in your config file, leverage the fact that it is bein
     iotedge restart NVIDIADeepStreamSDK
     ```
 
-This assumes that you did not change any file names and thus that the same IoT Edge deployment manifest applies.
+This assumes that you did not change any file names and thus the same IoT Edge deployment manifest applies.
 
 #### Use your own source videos and / or AI models
 
@@ -293,19 +293,19 @@ To use your own source videos and AI models and quickly iterate on them, you can
 
 #### Use live RTSP streams as inputs
 
-It is a very common configuration to have deepstream take several live RTSP streams as inputs. All you have to do is modify the configuration of the [source group](https://docs.nvidia.com/metropolis/deepstream/dev-guide/index.html#page/DeepStream_Development_Guide%2Fdeepstream_app_config.3.2.html%23wwpID0E0QB0HA) and update its `type` to `4` and `uri` to `rtsp://127.0.0.1/source1` in particular.
+It is a very common configuration to have Deepstream take several live RTSP streams as inputs. All you have to do is modify the configuration of the [source group](https://docs.nvidia.com/metropolis/Deepstream/dev-guide/index.html#page/DeepStream_Development_Guide%2FDeepstream_app_config.3.2.html%23wwpID0E0QB0HA) and update its `type` to `4` and `uri` to `rtsp://127.0.0.1/source1` in particular.
 
-To output RTSP stream with the final result, Deepstream can output RTSP videos on Tesla platforms but not on Jetson platforms for now. There is currently a limitation on RTSP encoding on Jetson platforms.
+To output an RTSP stream with the final result, Deepstream can output RTSP videos on Tesla platforms but not on Jetson platforms for now. There is currently a limitation on RTSP encoding on Jetson platforms.
 
 #### Learn all the configuration options available from Deepstream's documentation
 
 Deepstream supports a wide varity of options, a lot of which are available via configuraiton changes. To learn more about them, go to Deepstream's documentation:
-- [Configuration groups](https://docs.nvidia.com/metropolis/deepstream/dev-guide/index.html#page/DeepStream_Development_Guide%2Fdeepstream_app_config.3.2.html) documents all configuration options for each out-of-box plugins
-- [Application tuning](https://docs.nvidia.com/metropolis/deepstream/dev-guide/index.html#page/DeepStream_Development_Guide%2Fdeepstream_app_config.3.3.html) provides application tuning tips
+- [Configuration groups](https://docs.nvidia.com/metropolis/Deepstream/dev-guide/index.html#page/DeepStream_Development_Guide%2FDeepstream_app_config.3.2.html) documents all configuration options for each out-of-box plugin
+- [Application tuning](https://docs.nvidia.com/metropolis/Deepstream/dev-guide/index.html#page/DeepStream_Development_Guide%2FDeepstream_app_config.3.3.html) provides application tuning tips
 
 #### Verify your Deepstream module docker options
 
-Sometimes it is helpful to verify the options that Docker took into account when creating your Deepstream container via IoT Edge. This is particularly useful to double-check the folders that have been mounted in your container. The simplest way to do that is to use the `docker inspect` command:
+Sometimes it is helpful to verify the options that Docker took into account when creating your Deepstream container via IoT Edge. It is particularly useful to double-check the folders that have been mounted in your container. The simplest way to do that is to use the `docker inspect` command:
 
 ```bash
 sudo docker inspect NVIDIADeepStreamSDK
@@ -325,7 +325,7 @@ You can also use pre-built models made freely available by NVIDIA [here](https:/
 
 ### How to format IoT Edge messages?
 
-The `Gst-nvmsgbroker` plugin is the one sending output messages. Its full documentation is available [here](https://docs.nvidia.com/metropolis/deepstream/plugin-manual/index.html#page/DeepStream_Plugin_Manual%2Fdeepstream_plugin_details.02.15.html%23).
+The `Gst-nvmsgbroker` plugin is the one sending output messages. Its full documentation is available [here](https://docs.nvidia.com/metropolis/Deepstream/plugin-manual/index.html#page/DeepStream_Plugin_Manual%2FDeepstream_plugin_details.02.15.html%23).
 
 By default, you can use the `topic` property in Deepstream to set up the output of the Deepstream modules and define your [routes](https://docs.microsoft.com/en-us/azure/iot-edge/module-composition#declare-routes) in IoT Edge appropriately.
 
@@ -333,8 +333,8 @@ By default, you can use the `topic` property in Deepstream to set up the output 
 
 Iterating on a local model & config file locally and bind mounting them to the container is only recommended during active development, but it does not scale. To manage your application (AI model & config files artifacts in particular), you have two options:
 
-1. Package everything into one container. Have the artifacts you expect to change regularly like your AI model and config files in the latest layers of your docker container so that most of your docker image remain unchanged when updating those. Each model change will require a new module update.
-2. Use a separate 'artifacts' module to deliver these artifacts and bind mount them to the deepstream module. That way you can use either [twins](https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-devguide-module-twins) or your own methods to configure your 'artifacts' module at scale.
+1. Package everything into one container. Have the artifacts you expect to change regularly like your AI model and config files in the latest layers of your docker container so that most of your docker image remains unchanged when updating those. Each model change will require a new module update.
+2. Use a separate 'artifacts' module to deliver these artifacts and bind mount them to the Deepstream module. That way you can use either [twins](https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-devguide-module-twins) or your own methods to configure your 'artifacts' module at scale.
 
 ### Why is Deepstream running as one IoT Edge module with its own plugins vs plugins in different modules?
 
@@ -347,15 +347,15 @@ These types of optimizations only work when the entire pipeline is running in th
 
 ### When should you consider building your own Deepstream application vs reconfiguring an existing one?
 
-For some use cases, the default deepstream app is not enough. Whenever the changes are required in the plugin pipeline, configuration changes are not enough and a deepstream app needs to be re-compiled.
+For some use cases, the default Deepstream app is not enough. Whenever the changes are required in the plugin pipeline, configuration changes are not enough and a Deepstream app needs to be re-compiled.
 
-An common example of a different pipeline is to have cascading AI models(ex: AI 1- detect a package, AI 2- detect a barcode, etc.).
+A common example of a different pipeline is to have cascading AI models(ex: AI 1- detect a package, AI 2- detect a barcode, etc.).
 
-To build your own deepstream application or even build your own deepstream plugin, you can follow this [Deepstream documenation](https://docs.nvidia.com/metropolis/deepstream/dev-guide/index.html#page/DeepStream_Development_Guide%2Fdeepstream_custom_plugin.html%23wwpID0E0TB0HA).
+To build your own Deepstream application or even build your own Deepstream plugin, you can follow this link: [Deepstream documenation](https://docs.nvidia.com/metropolis/Deepstream/dev-guide/index.html#page/DeepStream_Development_Guide%2FDeepstream_custom_plugin.html%23wwpID0E0TB0HA).
 
-### Which performances can you expect from Deepstream application across NVIDIA GPUs?
+### What performance charateristics can you expect from Deepstream application across NVIDIA GPUs?
 
-NVIDIA published some performance benchmarks on their [documentation website](https://docs.nvidia.com/metropolis/deepstream/dev-guide/index.html#page/DeepStream_Development_Guide%2Fdeepstream_performance.html).
+NVIDIA published some performance benchmarks on their [documentation website](https://docs.nvidia.com/metropolis/Deepstream/dev-guide/index.html#page/DeepStream_Development_Guide%2FDeepstream_performance.html).
 
 ## Contributing
 
