@@ -276,13 +276,14 @@ You can learn more about its architecture in [NVIDIA's official documentation](h
 #### Make a quick configuration change
 
 To quickly change a value in your config file, leverage the fact that it is being mounted from a local file so all you have to do is (for instance via an ssh terminal):
-    1. Open your config file (in `/var/deepstream/config` in this sample)
-    2. Make your changes and save
-    3. Restart Deepstream container to force its re-creation with the updates
-    
-```bash
-sudo docker rm NVIDIADeepstreamSDK -f
-```
+
+1. Open your config file (in `/var/deepstream/custom_configs` in this sample)
+2. Make your changes and save
+3. Restart Deepstream container
+
+    ```bash
+    iotedge restart NVIDIADeepStreamSDK
+    ```
 
 This assumes that you did not change any file names and thus that the same IoT Edge deployment manifest applies.
 
@@ -307,7 +308,7 @@ Deepstream supports a wide varity of options, a lot of which are available via c
 Sometimes it is helpful to verify the options that Docker took into account when creating your Deepstream container via IoT Edge. This is particularly useful to double-check the folders that have been mounted in your container. The simplest way to do that is to use the `docker inspect` command:
 
 ```bash
-sudo docker inspect NVIDIADeepstreamSDK
+sudo docker inspect NVIDIADeepStreamSDK
 ```
 
 ## F. A.Q. 
