@@ -81,10 +81,10 @@ We'll now modify the configuration of the Deepstream application and the IoT Edg
 
     ```bash
     cd /var
-    sudo mkdir Deepstream
-    sudo chmod -R 777 ./Deepstream
-    mkdir ./Deepstream/custom_configs
-    cd ./Deepstream/custom_configs
+    sudo mkdir deepstream
+    sudo chmod -R 777 ./deepstream
+    mkdir ./deepstream/custom_configs
+    cd ./deepstream/custom_configs
     ```
 
     3. Use your favorite text editor to create a copy of the sample Deepstream configuration file:
@@ -129,18 +129,18 @@ We'll now modify the configuration of the Deepstream application and the IoT Edg
 
     ```json
     "HostConfig":{
-        "Binds": ["/var/Deepstream/custom_configs:/root/Deepstream_sdk_v4.0.1_jetson/sources/apps/sample_apps/Deepstream-test5/custom_configs/"]
+        "Binds": ["/var/deepstream/custom_configs:/root/deepstream_sdk_v4.0.1_jetson/sources/apps/sample_apps/deepstream-test5/custom_configs/"]
         }
     ```
 
-    - Edit your Deepstream application workigng directory and entrypoint to use this updated config file via Deepstream createOptions:
+    - Edit your Deepstream application working directory and entrypoint to use this updated config file via Deepstream createOptions:
     
     ```json
-    "WorkingDir": "/root/Deepstream_sdk_v4.0.1_jetson/sources/apps/sample_apps/Deepstream-test5/custom_configs/"
+    "WorkingDir": "/root/deepstream_sdk_v4.0.1_jetson/sources/apps/sample_apps/deepstream-test5/custom_configs/"
     ```
 
     ```json
-    "Entrypoint":["/usr/bin/Deepstream-test5-app","-c","test5_config_file_src_infer_azure_iotedge_edited.txt"]
+    "Entrypoint":["/usr/bin/deepstream-test5-app","-c","test5_config_file_src_infer_azure_iotedge_edited.txt"]
     ```
  
 3. Provide Deepstream module access to X11 server from the container by adding the createOptions:
@@ -167,7 +167,7 @@ We'll now modify the configuration of the Deepstream application and the IoT Edg
     "HostConfig": {
         "runtime": "nvidia",
         "Binds": [
-        "/var/Deepstream/custom_configs:/root/Deepstream_sdk_v4.0.1_jetson/sources/apps/sample_apps/Deepstream-test5/custom_configs/",
+        "/var/deepstream/custom_configs:/root/deepstream_sdk_v4.0.1_jetson/sources/apps/sample_apps/deepstream-test5/custom_configs/",
         "/tmp/.X11-unix/:/tmp/.X11-unix"
         ],
         "NetworkMode": "host"
@@ -222,7 +222,7 @@ We'll start by updating the batch-size to 8 instead of 4 (`primagy-gie` / `batch
     - Host these video files on your local disk
 
     ```bash
-    cd /var/Deepstream
+    cd /var/deepstream
     mkdir custom_streams
     cd ./custom_streams
     ```
@@ -243,8 +243,8 @@ We'll start by updating the batch-size to 8 instead of 4 (`primagy-gie` / `batch
 
     ```json
     "Binds": [
-            "/var/Deepstream/custom_configs:/root/Deepstream_sdk_v4.0.1_jetson/sources/apps/sample_apps/Deepstream-test5/custom_configs/",
-            "/var/Deepstream/custom_streams/sampleStreams:/root/Deepstream_sdk_v4.0.1_jetson/sources/apps/sample_apps/Deepstream-test5/custom_streams/",
+            "/var/deepstream/custom_configs:/root/deepstream_sdk_v4.0.1_jetson/sources/apps/sample_apps/deepstream-test5/custom_configs/",
+            "/var/deepstream/custom_streams/sampleStreams:/root/deepstream_sdk_v4.0.1_jetson/sources/apps/sample_apps/deepstream-test5/custom_streams/",
             "/tmp/.X11-unix/:/tmp/.X11-unix"
             ]
     ```
@@ -277,7 +277,7 @@ You can learn more about its architecture in [NVIDIA's official documentation](h
 
 To quickly change a value in your config file, leverage the fact that it is being mounted from a local file so all you have to do is (for instance via an ssh terminal):
 
-1. Open your config file (in `/var/Deepstream/custom_configs` in this sample)
+1. Open your config file (in `/var/deepstream/custom_configs` in this sample)
 2. Make your changes and save
 3. Restart Deepstream container
 
