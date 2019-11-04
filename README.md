@@ -324,6 +324,14 @@ Deepstream supports a wide varity of options, a lot of which are available via c
 - [Configuration groups](https://docs.nvidia.com/metropolis/Deepstream/dev-guide/index.html#page/DeepStream_Development_Guide%2FDeepstream_app_config.3.2.html) documents all configuration options for each out-of-box plugin
 - [Application tuning](https://docs.nvidia.com/metropolis/Deepstream/dev-guide/index.html#page/DeepStream_Development_Guide%2FDeepstream_app_config.3.3.html) provides application tuning tips
 
+#### Troubleshoot your DeepStream module
+
+To debug your DeepStream module, look at the last 200 lines of its logs:
+
+```bash
+iotedge logs NVIDIADeepStreamSDK --tail 200 -f
+```
+
 #### Verify your Deepstream module docker options
 
 Sometimes it is helpful to verify the options that Docker took into account when creating your Deepstream container via IoT Edge. It is particularly useful to double-check the folders that have been mounted in your container. The simplest way to do that is to use the `docker inspect` command:
