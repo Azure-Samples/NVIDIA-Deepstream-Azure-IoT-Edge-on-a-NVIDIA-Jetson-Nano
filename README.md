@@ -59,7 +59,7 @@ In VS Code, from your development machine:
     1. Right-click on your device (bottom left corner)
     2. Select `Start Monitoring Built-In Event Endpoint`
 
-At this point, you should be able to see messages sent by the Deepstream module to the cloud via the IoT Edge runtime in VS Code. These messages are the results of Deepstream processing a sample video and analyzing it with an sample AI model that detects people and cars in this video and sends a message for each object found.
+After a little while, (enough time for IoT Edge to download and start DeepStream module which is 1.75GB), you should be able to see messages sent by the Deepstream module to the cloud via the IoT Edge runtime in VS Code. These messages are the results of Deepstream processing a sample video and analyzing it with an sample AI model that detects people and cars in this video and sends a message for each object found.
 
 ![Telemetry sent to IoT Hub](./Telemetry.png "Messages sent from Deepstream module to Azure IoT Hub via the IoT Edge runtime")
 
