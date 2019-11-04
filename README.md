@@ -323,6 +323,10 @@ sudo docker inspect NVIDIADeepStreamSDK
 
 ## F. A.Q. 
 
+### Is Moby officially supported with DeepStream and IoT Edge?
+
+While Moby does, IoT Edge does not yet support the new way to mount NVIDIA GPUs into a Docker container. This support is planned with release 1.0.10 of IoT Edge for early 2020. For now, you still need to use the previous [nvidia-docker](https://github.com/NVIDIA/nvidia-docker) runtime with Docker CE, which is installed by default on Jetson Nano. That's why Deepstream SDK on IoT Edge is currently in preview.
+
 ### Which AI models does Deepstream support? 
 
 Deepstream relies on [NVIDIA TensorRT](https://docs.nvidia.com/deeplearning/sdk/tensorrt-developer-guide/index.html) in do the inferencing. Thus any AI models supported by TensorRT is supported with Deepstream. In practice, most of AI models are supported by TensorRT. See this [list of all layers supported by TensorRT](https://docs.nvidia.com/deeplearning/sdk/tensorrt-developer-guide/index.html#layers).
