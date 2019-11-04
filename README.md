@@ -384,7 +384,7 @@ For some use cases, the default Deepstream app is not enough. Whenever the chang
 
 A common example of a different pipeline is to have cascading AI models(ex: AI 1- detect a package, AI 2- detect a barcode, etc.).
 
-To build your own Deepstream application or even build your own Deepstream plugin, you can follow this link: [Deepstream documenation](https://docs.nvidia.com/metropolis/Deepstream/dev-guide/index.html#page/DeepStream_Development_Guide%2FDeepstream_custom_plugin.html%23wwpID0E0TB0HA).
+To build your own Deepstream application or even build your own Deepstream plugin, you can follow this link: [Deepstream documentation](https://docs.nvidia.com/metropolis/Deepstream/dev-guide/index.html#page/DeepStream_Development_Guide%2FDeepstream_custom_plugin.html%23wwpID0E0TB0HA).
 
 ### What performance charateristics can you expect from Deepstream application across NVIDIA GPUs?
 
