@@ -250,8 +250,18 @@ We'll start by updating the batch-size to 8 instead of 4 (`primagy-gie` / `batch
     ```
 
 3. Verify that your are still using your updated configuration file and still provide Deepstream access to your X11 server per section 2 instructions. You can double check your settings by comparing your deployment file to the one in this repo.
+4. To speed up IoT Edge message throughput, configure the edgeHub to use an in-memory store. In your deployment manifest, set the `usePersistentStorage` environment variable to `false` in edgeHub configuration (next to its `settings` node):
 
-4. Finally, deploy your updated IoT Edge solution:
+    ```json
+    "edgeHub": {
+                    "env": {
+                        "usePersistentStorage": {
+                        "value": "false"
+                        }
+                    }
+    ```
+
+5. Finally, deploy your updated IoT Edge solution:
     1. `Generate IoT Edge Deployment Manifest` by right clicking on the deployment.template.json file
     2. `Create Deployment for Single Device` by right clicking on the generated file in the /config folder
     3. Select your IoT Edge device
