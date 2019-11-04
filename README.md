@@ -333,7 +333,7 @@ Deepstream relies on [NVIDIA TensorRT](https://docs.nvidia.com/deeplearning/sdk/
 
 Of course it accepts AI models in TensorRT format but can also convert TensorFlow and ONNX models (see [this documentation](https://docs.nvidia.com/deeplearning/sdk/tensorrt-developer-guide/index.html#api) for more details on the ONNX -> TensorRT parser). Conversion is done automatically when launching the application.
 
-You can thus build your AI model with Azure Machine Learning and work with ONNX format. You'll also be able to use Custom Vision once their ONNX export is updated to use the latest ONNX version (for now, the ONNX version that Custom Vision uses is too old to be used with TensorRT).
+You can thus build your AI model with Azure Machine Learning and work with ONNX format or use [Custom Vision](https://www.customvision.ai/) with their ONNX export. Instructions to use Custom Vision will soon be added to this repo.
 
 You can also use pre-built models made freely available by NVIDIA [here](https://ngc.nvidia.com/catalog/models?orderBy=modifiedDESC&query=resnet&quickFilter=models&filters=) and customize them using [NVIDIA's Transfer Learning Toolkit](https://docs.nvidia.com/metropolis/TLT/tlt-getting-started-guide/index.html).
 
