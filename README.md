@@ -269,7 +269,7 @@ Deesptream's SDK based on GStreamer. It is very modular with its concepts of plu
 
 You can learn more about its architecture in [NVIDIA's official documentation](https://docs.nvidia.com/metropolis/Deepstream/dev-guide/index.html#page/DeepStream_Development_Guide%2FDeepstream_app_architecture.html) (sneak peak below).
 
-![NVIDIA Deepstream Application Architecture](http://docs.nvidia.com/metropolis/Deepstream/dev-guide/DeepStream_Development_Guide/images/image4.png)
+![NVIDIA Deepstream Application Architecture](./DeepstreamArchitecture.png "NVIDIA Deepstream Application Architecture - See NVIDIA's official documentation for more details")
 
 ### Tips to edit your Deepstream application
 
