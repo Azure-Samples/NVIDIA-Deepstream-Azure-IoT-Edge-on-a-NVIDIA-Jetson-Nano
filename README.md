@@ -59,7 +59,7 @@ In VS Code, from your development machine:
     1. Right-click on your device (bottom left corner)
     2. Select `Start Monitoring Built-In Event Endpoint`
 
-At this point, you should be able to see messages sent by the Deepstream module to the cloud via the IoT Edge runtime in VS Code. These messages are the results of Deepstream processing a sample video and analyzing it with an sample AI model that detects people and cars in this video and sends a message for each object found.
+After a little while, (enough time for IoT Edge to download and start DeepStream module which is 1.75GB), you should be able to see messages sent by the Deepstream module to the cloud via the IoT Edge runtime in VS Code. These messages are the results of Deepstream processing a sample video and analyzing it with an sample AI model that detects people and cars in this video and sends a message for each object found.
 
 ![Telemetry sent to IoT Hub](./Telemetry.png "Messages sent from Deepstream module to Azure IoT Hub via the IoT Edge runtime")
 
@@ -250,8 +250,18 @@ We'll start by updating the batch-size to 8 instead of 4 (`primagy-gie` / `batch
     ```
 
 3. Verify that your are still using your updated configuration file and still provide Deepstream access to your X11 server per section 2 instructions. You can double check your settings by comparing your deployment file to the one in this repo.
+4. To speed up IoT Edge message throughput, configure the edgeHub to use an in-memory store. In your deployment manifest, set the `usePersistentStorage` environment variable to `false` in edgeHub configuration (next to its `settings` node):
 
-4. Finally, deploy your updated IoT Edge solution:
+    ```json
+    "edgeHub": {
+                    "env": {
+                        "usePersistentStorage": {
+                        "value": "false"
+                        }
+                    }
+    ```
+
+5. Finally, deploy your updated IoT Edge solution:
     1. `Generate IoT Edge Deployment Manifest` by right clicking on the deployment.template.json file
     2. `Create Deployment for Single Device` by right clicking on the generated file in the /config folder
     3. Select your IoT Edge device
@@ -293,7 +303,18 @@ To use your own source videos and AI models and quickly iterate on them, you can
 
 #### Use live RTSP streams as inputs
 
-It is a very common configuration to have Deepstream take several live RTSP streams as inputs. All you have to do is modify the configuration of the [source group](https://docs.nvidia.com/metropolis/Deepstream/dev-guide/index.html#page/DeepStream_Development_Guide%2FDeepstream_app_config.3.2.html%23wwpID0E0QB0HA) and update its `type` to `4` and `uri` to `rtsp://127.0.0.1/source1` in particular.
+It is a very common configuration to have DeepStream take several live RTSP streams as inputs. All you have to do is modify DeepStream's configuration file and update its [source group](https://docs.nvidia.com/metropolis/Deepstream/dev-guide/index.html#page/DeepStream_Development_Guide%2FDeepstream_app_config.3.2.html%23wwpID0E0QB0HA):
+
+```txt
+type=4
+uri=rtsp://127.0.0.1:554/rtsp_path
+```
+
+and update its `streamux group`:
+
+```txt
+live-source=1
+```
 
 To output an RTSP stream with the final result, Deepstream can output RTSP videos on Tesla platforms but not on Jetson platforms for now. There is currently a limitation on RTSP encoding on Jetson platforms.
 
@@ -302,6 +323,14 @@ To output an RTSP stream with the final result, Deepstream can output RTSP video
 Deepstream supports a wide varity of options, a lot of which are available via configuraiton changes. To learn more about them, go to Deepstream's documentation:
 - [Configuration groups](https://docs.nvidia.com/metropolis/Deepstream/dev-guide/index.html#page/DeepStream_Development_Guide%2FDeepstream_app_config.3.2.html) documents all configuration options for each out-of-box plugin
 - [Application tuning](https://docs.nvidia.com/metropolis/Deepstream/dev-guide/index.html#page/DeepStream_Development_Guide%2FDeepstream_app_config.3.3.html) provides application tuning tips
+
+#### Troubleshoot your DeepStream module
+
+To debug your DeepStream module, look at the last 200 lines of its logs:
+
+```bash
+iotedge logs NVIDIADeepStreamSDK --tail 200 -f
+```
 
 #### Verify your Deepstream module docker options
 
@@ -313,13 +342,17 @@ sudo docker inspect NVIDIADeepStreamSDK
 
 ## F. A.Q. 
 
+### Is Moby officially supported with DeepStream and IoT Edge?
+
+While Moby does, IoT Edge does not yet support the new way to mount NVIDIA GPUs into a Docker container. This support is planned with release 1.0.10 of IoT Edge for early 2020. For now, you still need to use the previous [nvidia-docker](https://github.com/NVIDIA/nvidia-docker) runtime with Docker CE, which is installed by default on Jetson Nano. That's why Deepstream SDK on IoT Edge is currently in preview.
+
 ### Which AI models does Deepstream support? 
 
 Deepstream relies on [NVIDIA TensorRT](https://docs.nvidia.com/deeplearning/sdk/tensorrt-developer-guide/index.html) in do the inferencing. Thus any AI models supported by TensorRT is supported with Deepstream. In practice, most of AI models are supported by TensorRT. See this [list of all layers supported by TensorRT](https://docs.nvidia.com/deeplearning/sdk/tensorrt-developer-guide/index.html#layers).
 
 Of course it accepts AI models in TensorRT format but can also convert TensorFlow and ONNX models (see [this documentation](https://docs.nvidia.com/deeplearning/sdk/tensorrt-developer-guide/index.html#api) for more details on the ONNX -> TensorRT parser). Conversion is done automatically when launching the application.
 
-You can thus build your AI model with Azure Machine Learning and work with ONNX format. You'll also be able to use Custom Vision once their ONNX export is updated to use the latest ONNX version (for now, the ONNX version that Custom Vision uses is too old to be used with TensorRT).
+You can thus build your AI model with Azure Machine Learning and work with ONNX format or use [Custom Vision](https://www.customvision.ai/) with their ONNX export. Instructions to use Custom Vision will soon be added to this repo.
 
 You can also use pre-built models made freely available by NVIDIA [here](https://ngc.nvidia.com/catalog/models?orderBy=modifiedDESC&query=resnet&quickFilter=models&filters=) and customize them using [NVIDIA's Transfer Learning Toolkit](https://docs.nvidia.com/metropolis/TLT/tlt-getting-started-guide/index.html).
 
@@ -351,7 +384,7 @@ For some use cases, the default Deepstream app is not enough. Whenever the chang
 
 A common example of a different pipeline is to have cascading AI models(ex: AI 1- detect a package, AI 2- detect a barcode, etc.).
 
-To build your own Deepstream application or even build your own Deepstream plugin, you can follow this link: [Deepstream documenation](https://docs.nvidia.com/metropolis/Deepstream/dev-guide/index.html#page/DeepStream_Development_Guide%2FDeepstream_custom_plugin.html%23wwpID0E0TB0HA).
+To build your own Deepstream application or even build your own Deepstream plugin, you can follow this link: [Deepstream documentation](https://docs.nvidia.com/metropolis/Deepstream/dev-guide/index.html#page/DeepStream_Development_Guide%2FDeepstream_custom_plugin.html%23wwpID0E0TB0HA).
 
 ### What performance charateristics can you expect from Deepstream application across NVIDIA GPUs?
 

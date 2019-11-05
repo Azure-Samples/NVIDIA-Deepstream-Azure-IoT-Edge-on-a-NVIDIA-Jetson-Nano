@@ -23,6 +23,11 @@
             "type": "docker",
             "status": "running",
             "restartPolicy": "always",
+            "env": {
+              "usePersistentStorage": {
+                "value": "false"
+              }
+            },
             "settings": {
               "image": "mcr.microsoft.com/azureiotedge-hub:1.0",
               "createOptions": {
