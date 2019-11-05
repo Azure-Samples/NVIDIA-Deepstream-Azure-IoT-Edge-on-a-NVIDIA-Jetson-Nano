@@ -303,14 +303,14 @@ To use your own source videos and AI models and quickly iterate on them, you can
 
 #### Use live RTSP streams as inputs
 
-It is a very common configuration to have DeepStream take several live RTSP streams as inputs. All you have to do is modify DeepStream's configuration file and update its [source group](https://docs.nvidia.com/metropolis/Deepstream/dev-guide/index.html#page/DeepStream_Development_Guide%2FDeepstream_app_config.3.2.html%23wwpID0E0QB0HA):
+It is a very common configuration to have DeepStream take several live RTSP streams as inputs. All you have to do is modify DeepStream's configuration file and update its [source group](https://docs.nvidia.com/metropolis/deepstream/dev-guide/index.html#page/DeepStream_Development_Guide%2Fdeepstream_app_config.3.2.html%23wwpID0E0QB0HA):
 
 ```txt
 type=4
 uri=rtsp://127.0.0.1:554/rtsp_path
 ```
 
-and update its `streamux group`:
+and update its [streammux group](https://docs.nvidia.com/metropolis/deepstream/dev-guide/index.html#page/DeepStream_Development_Guide%2Fdeepstream_app_config.3.2.html%23wwpID0E0DB0HA):
 
 ```txt
 live-source=1
