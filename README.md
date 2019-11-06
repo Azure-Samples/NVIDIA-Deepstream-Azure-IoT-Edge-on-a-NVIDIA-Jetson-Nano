@@ -14,7 +14,7 @@ This is a sample showing how to do real-time video analytics with [NVIDIA Deepst
 
 To complete this sample, you need a [NVIDIA Jetson Nano device](https://developer.nvidia.com/embedded/buy/jetson-nano-devkit). This device is powerful enough to process 8 video streams at a resolution of 1080p, 30 frames-per-second with a resnet10 model and is compatible with IoT Edge. If you need to process more video streams, the same code works with more powerful NVIDIA Jetson devices like the [TX2](https://developer.nvidia.com/embedded/buy/jetson-tx2) or the [Xavier](https://developer.nvidia.com/embedded/buy/jetson-agx-xavier-devkit), and with server-class appliances that includes [NVIDIA T4](https://www.nvidia.com/en-us/data-center/tesla-t4/) or other NVIDIA Tesla GPUs.
 
-Check out [this video](https://www.youtube.com/watch?v=_K5fqGLO8us) to see this demo in action and understand how it was built:
+Check out [this video](https://www.youtube.com/watch?v=475nlIETSkw) to see this demo in action and understand how it was built:
 
 [![Deepstream On IoT Edge on Jetson Nano](./IoTShowVideo.png)](https://www.youtube.com/watch?v=475nlIETSkw)
 
