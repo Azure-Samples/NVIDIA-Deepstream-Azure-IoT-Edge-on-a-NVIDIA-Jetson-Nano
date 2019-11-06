@@ -16,7 +16,7 @@ To complete this sample, you need a [NVIDIA Jetson Nano device](https://develope
 
 Check out [this video](https://www.youtube.com/watch?v=_K5fqGLO8us) to see this demo in action and understand how it was built:
 
-[![Deepstream On IoT Edge on Jetson Nano](assets/IoTShowVideo.png)](https://www.youtube.com/watch?v=475nlIETSkw)
+[![Deepstream On IoT Edge on Jetson Nano](./IoTShowVideo.png)](https://www.youtube.com/watch?v=475nlIETSkw)
 
 ## Prerequisites
 
