@@ -14,6 +14,10 @@ This is a sample showing how to do real-time video analytics with [NVIDIA Deepst
 
 To complete this sample, you need a [NVIDIA Jetson Nano device](https://developer.nvidia.com/embedded/buy/jetson-nano-devkit). This device is powerful enough to process 8 video streams at a resolution of 1080p, 30 frames-per-second with a resnet10 model and is compatible with IoT Edge. If you need to process more video streams, the same code works with more powerful NVIDIA Jetson devices like the [TX2](https://developer.nvidia.com/embedded/buy/jetson-tx2) or the [Xavier](https://developer.nvidia.com/embedded/buy/jetson-agx-xavier-devkit), and with server-class appliances that includes [NVIDIA T4](https://www.nvidia.com/en-us/data-center/tesla-t4/) or other NVIDIA Tesla GPUs.
 
+Check out [this video](https://www.youtube.com/watch?v=_K5fqGLO8us) to see this demo in action and understand how it was built:
+
+[![Deepstream On IoT Edge on Jetson Nano](assets/IoTShowVideo.png)](https://www.youtube.com/watch?v=475nlIETSkw)
+
 ## Prerequisites
 
 - **Hardware**: You need a [NVIDIA Jetson Nano device](https://developer.nvidia.com/embedded/buy/jetson-nano-devkit) ideally with a [5V-4A barrel jack power supply like this one](https://www.adafruit.com/product/1466), which requires a jumper cable (such as [these ones](https://www.amazon.com/120pcs-Multicolor-Jumper-Arduino-Raspberry/dp/B01BAXKDN4/ref=asc_df_B01BAXKDN4/?tag=hyprod-20&linkCode=df0&hvadid=198075247191&hvpos=1o1&hvnetw=g&hvrand=12715964868364075974&hvpone=&hvptwo=&hvqmt=&hvdev=c&hvdvcmdl=&hvlocint=&hvlocphy=9033288&hvtargid=pla-317965496827&psc=1)) on pins J48. See the [Power Guide section of the Jetson Nano Developer Kit](https://developer.nvidia.com/embedded/dlc/jetson-nano-dev-kit-user-guide) for more details. Alternatively, a 5V-2.5A Micro-USB power supply will work without a jumper cable but may limit the performance of your Deepstream application. In all cases, please make sure to use the default `Max` power source mode (e.g. 10W). To visualize the video feeds, you'll need an HDMI monitor and cable connected to your NVIDIA Jetson Nano.
