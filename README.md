@@ -186,7 +186,7 @@ We'll now modify the configuration of the Deepstream application and the IoT Edg
 4. Authorize Docker to connect to X11 server, via a terminal connected to your X11 server running on your Nano device (not via an ssh terminal):
 
     ```bash
-    xhost +local:docker
+    xhost +local:nvidia-docker
     ```
 
 5. Finally, deploy your updated IoT Edge solution:
