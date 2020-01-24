@@ -27,9 +27,9 @@ Check out [this video](https://www.youtube.com/watch?v=475nlIETSkw) to see this 
 > This repo only works with Jetpack 4.2 (= Release 32, Revision 1) for now. NVIDIA released Jetpack 4.3 (= Release 32, Revision 3) recently and an update to DeepStream container in the marketplace to support Jetpack 4.3 is on its way. For now please use a Jetpack 4.2.
 > To check your Jetpack version, you can run the following command and look at the Revision number:
 
-    ```bash
-    head -n 1 /etc/nv_tegra_release
-    ```
+```bash
+head -n 1 /etc/nv_tegra_release
+```
 
 - **Verify that NVIDIA docker is already installed**:  Run `nvidia-docker --help` to verify that you have nvidia-docker already installed
 - **Install IoT Edge**: See the [Azure IoT Edge installation instructions](https://docs.microsoft.com/en-us/azure/iot-edge/how-to-install-iot-edge-linux) for Ubuntu Server 18.04. Skip the Install Container Runtime section since we will be using nvidia-docker, which is already installed. Connect your device to your IoT Hub using the manual provisioning option. See this [quickstart](https://docs.microsoft.com/en-us/azure/iot-edge/quickstart-linux) if you don't yet have an Azure IoT Hub.
