@@ -21,19 +21,59 @@ Check out [this video](https://www.youtube.com/watch?v=475nlIETSkw) to see this 
 ## Prerequisites
 
 - **Hardware**: You need a [NVIDIA Jetson Nano device](https://developer.nvidia.com/embedded/buy/jetson-nano-devkit) ideally with a [5V-4A barrel jack power supply like this one](https://www.adafruit.com/product/1466), which requires a jumper cable (such as [these ones](https://www.amazon.com/120pcs-Multicolor-Jumper-Arduino-Raspberry/dp/B01BAXKDN4/ref=asc_df_B01BAXKDN4/?tag=hyprod-20&linkCode=df0&hvadid=198075247191&hvpos=1o1&hvnetw=g&hvrand=12715964868364075974&hvpone=&hvptwo=&hvqmt=&hvdev=c&hvdvcmdl=&hvlocint=&hvlocphy=9033288&hvtargid=pla-317965496827&psc=1)) on pins J48. See the [Power Guide section of the Jetson Nano Developer Kit](https://developer.nvidia.com/embedded/dlc/jetson-nano-dev-kit-user-guide) for more details. Alternatively, a 5V-2.5A Micro-USB power supply will work without a jumper cable but may limit the performance of your Deepstream application. In all cases, please make sure to use the default `Max` power source mode (e.g. 10W). To visualize the video feeds, you'll need an HDMI monitor and cable connected to your NVIDIA Jetson Nano.
-- **Install Jetson Nano base image**: install its base image, [JetPack version 4.2](https://developer.nvidia.com/jetpack-4_2). It is based on Ubuntu 18.04 and already includes NVIDIA drivers version > 418, CUDA and Nvidia-Docker.
+- **Flash your Jetson Nano SD Card**: download and flash either this [JetPack version 4.3 image](https://developer.nvidia.com/embedded/jetpack) if you have an HDMI screen or the [image from this NVIDIA course](https://courses.nvidia.com/courses/course-v1:DLI+C-IV-02+V1/info) otherwise (the course is a great free learning resource anyway). The image from the course is also based on JetPack 4.3 but includes an USB Device Mode to use the Jetson Nano without HDMI screen. For the rest of this tutorial will assume that you use the device in USB Device Mode. In any cases, you can use [BalenaEtcher](https://www.balena.io/etcher/) tool to flash your SD card. Both of these images are based on Ubuntu 18.04 and already includes NVIDIA drivers version, CUDA and Nvidia-Docker. 
 
 > [!WARNING]
-> This repo only works with Jetpack 4.2 (= Release 32, Revision 1) for now. NVIDIA released Jetpack 4.3 (= Release 32, Revision 3) recently and an update to DeepStream container in the marketplace to support Jetpack 4.3 is on its way. For now please use a Jetpack 4.2.
-> To check your Jetpack version, you can run the following command and look at the Revision number:
+> This branch only works with DeepStream 4.0.2, which requires JetPack 4.3 (= Release 32, Revision 3). To use DeepStream 4.0.1 with JetPack 4.2, please look at the `ds-4.0.1` branch of this repo. To double check, your JetPack version, you can use the following command:
+
 
 ```bash
 head -n 1 /etc/nv_tegra_release
 ```
 
-- **Verify that NVIDIA docker is already installed**:  Run `nvidia-docker --help` to verify that you have nvidia-docker already installed
+- **Connect your Jetson Nano to your developer's machine with the USB Device Mode**: we'll do that by plugging a micro-USB cable from your Jetson Nano to your developer's machine and using the USB Device Mode provided in NVIDIA's course base image. With this mode, you do not need to hook up a monitor directly to your Jetson Nano. Instead, boot your device and wait for 30 seconds then open yoru favorite browser, go to [http://192.168.55.1:8888](http://192.168.55.1:8888) and enter the password `dlinano` to get access to a command line on your Jetson Nano.
+
+![Jupyter Notebook](./JupyterNotebook.png "Jetson Nano controlled by a Jupyter Notebook via the USB Device Mode")
+
+- **Connect your Jetson Nano to the internet**: Either use an ethernet connection, in which case you can skip this section or connect your device to WiFi using the above USB Device Mode terminal:
+
+    To connect your Jetson to a WiFi network from a terminal, follow these steps
+
+    1. Re-scan available WiFi networks
+
+        ```bash
+        nmcli device wifi rescan
+        ```
+
+    2. List available WiFi networks, and find the ``ssid_name`` of your network.
+
+        ```bash
+        nmcli device wifi list
+        ```
+
+    3. Connect to a selected WiFi network
+
+        ```bash
+        nmcli device wifi connect <ssid_name> password <password>
+        ```
+
+- **Connect your Jetson Nano to an SSH client**: The USB Device Mode terminal is limited because it does not support copy/paste. So to make it easier to go through the steps of this sample, it is recommended to open an SSH connection with your favorite SSH Client. 
+
+    1. Find your IP address using the USB Device Mode terminal
+
+        ```bash
+        ifconfig
+        ```
+
+    2. Make sure that your laptop is on the same network as yoru Jetson Nano device and open an SSH connection on your Jetson Device (password = `dlinano`):
+
+        ```bash
+        ssh dlinano@your-ip-address
+        ```
+
 - **Install IoT Edge**: See the [Azure IoT Edge installation instructions](https://docs.microsoft.com/en-us/azure/iot-edge/how-to-install-iot-edge-linux) for Ubuntu Server 18.04. Skip the Install Container Runtime section since we will be using nvidia-docker, which is already installed. Connect your device to your IoT Hub using the manual provisioning option. See this [quickstart](https://docs.microsoft.com/en-us/azure/iot-edge/quickstart-linux) if you don't yet have an Azure IoT Hub.
-- **Install VS Code and its the IoT Edge extension on your developer's machine**: On your developer's machine (which is typically not your Jetson Nano, though it could be), get [VS Code](https://code.visualstudio.com/) and its [IoT Edge extension](https://marketplace.visualstudio.com/items?itemName=vsciot-vscode.azure-iot-tools#overview). [Configure this extension with your IoT Hub](https://docs.microsoft.com/en-us/azure/iot-edge/how-to-deploy-modules-vscode#sign-in-to-access-your-iot-hub).
+- **Install VS Code and its the IoT Edge extension on your developer's machine**: On your developer's machine, get [VS Code](https://code.visualstudio.com/) and its [IoT Edge extension](https://marketplace.visualstudio.com/items?itemName=vsciot-vscode.azure-iot-tools#overview). [Configure this extension with your IoT Hub](https://docs.microsoft.com/en-us/azure/iot-edge/how-to-deploy-modules-vscode#sign-in-to-access-your-iot-hub).
+- **Install VLC to view RTSP video streams**: On your developer's machine, [install VLC](https://www.videolan.org/vlc/index.html).
 
 ![Jetson Nano](./JetsonNano.png "NVIDIA Jetson Nano device used to run Deepstream with IoT Edge")
 
@@ -59,7 +99,7 @@ In VS Code, from your development machine:
     2. Select `Azure IoT Edge: Add IoT Edge module`
     3. Select the default deployment manifest (deployment.template.json)
     4. Select `Module from Azure Marketplace`.
-    5. It opens a new tab with all IoT Edge module offers from the Azure Marketplace. Select the `Nvidia Deepstream SDK` one, select the NVIDIA DeapStream SDK 4.x.x for Jetson plan (Jetson) and select the `latest` tag.
+    5. It opens a new tab with all IoT Edge module offers from the Azure Marketplace. Select the `Nvidia Deepstream SDK` one, select the NVIDIA DeapStream SDK 4.0.2 for Jetson plan and select the `latest` tag.
 
 ![Deepsteam in Azure Marketplace](./DeepstreamInMarketplace.png "NVIDIA Deepstream in Azure Marketplace")
 
@@ -72,22 +112,19 @@ In VS Code, from your development machine:
     1. Right-click on your device (bottom left corner)
     2. Select `Start Monitoring Built-In Event Endpoint`
 
-After a little while, (enough time for IoT Edge to download and start DeepStream module which is 1.75GB), you should be able to see messages sent by the Deepstream module to the cloud via the IoT Edge runtime in VS Code. These messages are the results of Deepstream processing a sample video and analyzing it with an sample AI model that detects people and cars in this video and sends a message for each object found.
+After a little while, (enough time for IoT Edge to download and start DeepStream module which is 1.75GB and compile the AI model), you should be able to see messages sent by the Deepstream module to the cloud via the IoT Edge runtime in VS Code. These messages are the results of Deepstream processing a sample video and analyzing it with an sample AI model that detects people and cars in this video and sends a message for each object found.
 
 ![Telemetry sent to IoT Hub](./Telemetry.png "Messages sent from Deepstream module to Azure IoT Hub via the IoT Edge runtime")
 
 ## View the processed videos
 
-We'll now modify the configuration of the Deepstream application and the IoT Edge deployment manifest to be able to see the output video streams. We'll do that by asking Deepstream to output the inferred videos and by providing Deepstream module access to X11 server (graphic server).
-
-> [!WARNING]
-> Today, Deepstream can output an RTSP stream from a container on Tesla platforms but not on Jetson platforms. This is an improvement that the Jetson team is looking at. Because of this limitation, we will leverage a X11 server in the rest of this sample.
+We'll now modify the configuration of the Deepstream application and the IoT Edge deployment manifest to be able to see the output video streams. We'll do that by asking Deepstream to output the inferred videos to an RTSP video stream and visualize this RTSP stream with VLC.
 
 1. Create your updated Deepstream config file on your Nano device:
     a. Open an SSH connection on your Nano device (for instance from VS Code terminal):
     
     ```cmd
-    ssh yourNanoUsername@yourNanoDeviceName
+    ssh dlinano@your-nano-ip-address
     ```
 
     2. Create a new folder to host modified Deepstream config files
@@ -95,8 +132,8 @@ We'll now modify the configuration of the Deepstream application and the IoT Edg
     ```bash
     cd /var
     sudo mkdir deepstream
-    sudo chmod -R 777 ./deepstream
     mkdir ./deepstream/custom_configs
+    sudo chmod -R 777 /var/deepstream
     cd ./deepstream/custom_configs
     ```
 
@@ -110,18 +147,30 @@ We'll now modify the configuration of the Deepstream application and the IoT Edg
         - Copy the content of the original Deepstream configuration file which you can find in this repo under `test5_config_file_src_infer_azure_iotedge.txt`
 
     4. Edit the configuration file:
-        - Edit the first sink to be an EglSink instead of FakeSink:
-
+        - Disable the first sink (FakeSink) and add a new RTSP sink with the following properties:
+        
         ```bash
         [sink0]
+        enable=0
+        ```
+
+        ```bash
+        [sink3]
         enable=1
-        #Type - 1=FakeSink 2=EglSink 3=File
-        type=2
+        #Type - 1=FakeSink 2=EglSink 3=File 4=RTSPStreaming
+        type=4
+        #1=h264 2=h265
+        codec=1
+        sync=0
+        bitrate=4000000
+        # set below properties in case of RTSPStreaming
+        rtsp-port=8554
+        udp-port=5400
         ```
 
         - Reduce the number of inferences to be every 3 frames (see `interval` property) otherwise the Nano will drop some frames. In the next section, we'll use a Nano specific config to process 8 video streams in real-time:
 
-        ```bash
+        ```
         [primary-gie]
         enable=1
         gpu-id=0
@@ -135,6 +184,13 @@ We'll now modify the configuration of the Deepstream application and the IoT Edg
         interval=2
         ```
 
+        - To make it easier to connect to the output RTSP stream, let's set DeepStream to continuously loop over the test input video files:
+
+        ```
+        [tests]
+        file-loop=1
+        ```
+
         - Save and Quit (CTRL+O, CTRL+X)
 
 2. Mount your updated config file in the Deepstream module by adding its createOptions in the `deployment.template.json` file from your development's machine:
@@ -142,71 +198,56 @@ We'll now modify the configuration of the Deepstream application and the IoT Edg
 
     ```json
     "HostConfig":{
-        "Binds": ["/var/deepstream/custom_configs:/root/deepstream_sdk_v4.0.1_jetson/sources/apps/sample_apps/deepstream-test5/custom_configs/"]
+        "Binds": ["/var/deepstream/custom_configs:/root/deepstream_sdk_v4.0.2_jetson/sources/apps/sample_apps/deepstream-test5/custom_configs/"]
         }
     ```
 
     - Edit your Deepstream application working directory and entrypoint to use this updated config file via Deepstream createOptions:
     
     ```json
-    "WorkingDir": "/root/deepstream_sdk_v4.0.1_jetson/sources/apps/sample_apps/deepstream-test5/custom_configs/"
+    "WorkingDir": "/root/deepstream_sdk_v4.0.2_jetson/sources/apps/sample_apps/deepstream-test5/custom_configs/"
     ```
 
     ```json
     "Entrypoint":["/usr/bin/deepstream-test5-app","-c","test5_config_file_src_infer_azure_iotedge_edited.txt"]
     ```
- 
-3. Provide Deepstream module access to X11 server from the container by adding the createOptions:
-    - Get the value of your `$DISPLAY` environment variable from your Nano device (via a terminal using the X11 server e.g. displayed on the screen that you want to use, not via an ssh terminal):
-    
-    ```bash
-    echo $DISPLAY
-    ```
-    
-    - Update your deployment manifest to include the following from your development's machine (modify the `DISPLAY` environment variable per what you got previously):
-        - In Deepstream module section:
 
-        ```json
-        "env": {
-              "DISPLAY":{
-                "value": ":0"
-              }
-            }
-	    ```
-
-        - In Deepstream `CreateOptions` module section:
+3. Open the RTSP port of DeepStream module so that you can visualize this feed from another device:
+    - Add the following to your Deepstream createOptions, at the root:
 
     ```json
-    "HostConfig": {
-        "runtime": "nvidia",
-        "Binds": [
-        "/var/deepstream/custom_configs:/root/deepstream_sdk_v4.0.1_jetson/sources/apps/sample_apps/deepstream-test5/custom_configs/",
-        "/tmp/.X11-unix/:/tmp/.X11-unix"
-        ],
-        "NetworkMode": "host"
-    },
-    "NetworkingConfig": {
-        "EndpointsConfig": {
-        "host": {}
-        }
+    "ExposedPorts":{
+        "8554/tcp": {}
     }
-	```
-
-4. Authorize Docker to connect to X11 server, via a terminal connected to your X11 server running on your Nano device (not via an ssh terminal):
-
-    ```bash
-    xhost +local:nvidia-docker
     ```
 
-5. Finally, deploy your updated IoT Edge solution:
+    - Add the following to your Deepstream createOptions, in the `HostConfig` node:
+
+    ```json
+    "PortBindings": {
+        "8554/tcp": [
+            {
+            "HostPort": "8554"
+            }
+        ]
+    }
+    ```
+
+4. Deploy your updated IoT Edge solution:
     1. `Generate IoT Edge Deployment Manifest` by right clicking on the deployment.template.json file
     2. `Create Deployment for Single Device` by right clicking on the generated file in the /config folder
     3. Select your IoT Edge device
     4. Start monitoring the messages sent from the device to the cloud by right clicking on the device (bottom left corner) and select `Start Monitoring Built-In Event Endpoint`
 
+5. Finally, open the default output RTSP stream generated by DeepStream with VLC:
+    1. Open VLC
+    2. Go to `Media` > `Open Network Stream`
+    3. Paste the default `RTSP Video URL` generated by deepstream,  which follows the format `rtsp://your-nano-ip-address:8554/ds-test`
+    4. Click `Play`
+
 You should now see messages recevied by IoT Hub via in VS Code AND see the processed video on your screen.
 
-![Default Output of Deepstream](./4VideosProcessed.png "Output of default Deepstream application running on IoT Edge")
+![Default Output of Deepstream](./4VideosProcessedVLC.png "Output of default Deepstream application running on IoT Edge")
 
 ## Process and view 8 video streams (1080p 30fps)
 
@@ -237,40 +278,46 @@ We'll start by updating the batch-size to 8 instead of 4 (`primagy-gie` / `batch
     ```bash
     cd /var/deepstream
     mkdir custom_streams
+    sudo chmod -R 777 /var/deepstream
     cd ./custom_streams
     ```
 
     - Download the video files
 
     ```bash
-    wget -O streams.tar.gz --no-check-certificate "https://onedrive.live.com/download?cid=0C0A4A69A0CDCB4C&resid=C0A4A69A0CDCB4C%21585942&authkey=AK97kEm8xWwybjo"
+    wget -O cars-streams.tar.gz --no-check-certificate "https://onedrive.live.com/download?cid=0C0A4A69A0CDCB4C&resid=0C0A4A69A0CDCB4C%21588371&authkey=AAavgrxG95v9gu0"
     ```
 
     - Un-compress the video files
 
     ```bash
-    tar -xzvf streams.tar.gz
+    tar -xzvf cars-streams.tar.gz
     ```
 
     - Mount these video streams by adding the following binding via the `HostConfig` node of Deepstream's  createOptions:
 
     ```json
     "Binds": [
-            "/var/deepstream/custom_configs:/root/deepstream_sdk_v4.0.1_jetson/sources/apps/sample_apps/deepstream-test5/custom_configs/",
-            "/var/deepstream/custom_streams/sampleStreams:/root/deepstream_sdk_v4.0.1_jetson/sources/apps/sample_apps/deepstream-test5/custom_streams/",
-            "/tmp/.X11-unix/:/tmp/.X11-unix"
+            "/var/deepstream/custom_configs/:/root/deepstream_sdk_v4.0.2_jetson/sources/apps/sample_apps/deepstream-test5/custom_configs/",
+            "/var/deepstream/custom_streams/:/root/deepstream_sdk_v4.0.2_jetson/sources/apps/sample_apps/deepstream-test5/custom_streams/"
             ]
     ```
 
-3. Verify that your are still using your updated configuration file and still provide Deepstream access to your X11 server per section 2 instructions. You can double check your settings by comparing your deployment file to the one in this repo.
-4. To speed up IoT Edge message throughput, configure the edgeHub to use an in-memory store. In your deployment manifest, set the `usePersistentStorage` environment variable to `false` in edgeHub configuration (next to its `settings` node):
+3. Verify that your are still using your updated configuration file and still expose Deepstream's RTSP port (8554). You can double check your settings by comparing your deployment file to the one in this repo.
+4. To speed up IoT Edge message throughput, configure the edgeHub to use an in-memory store. In your deployment manifest, set the `usePersistentStorage` environment variable to `false` in edgeHub configuration (next to its `settings` node) and disable unused protocol heads (DeepStream uses MQTT to communicate with the EdgeHub):
 
     ```json
     "edgeHub": {
                     "env": {
-                        "usePersistentStorage": {
+                      "usePersistentStorage": {
                         "value": "false"
-                        }
+                      },
+                      "amqpSettings__enabled": {
+                        "value": false
+                      },
+                      "httpSettings__enabled": {
+                        "value": false
+                      }
                     }
     ```
 
@@ -282,11 +329,13 @@ We'll start by updating the batch-size to 8 instead of 4 (`primagy-gie` / `batch
 
 You should now see the 8 video streams being processed and displayed on your screen.
 
-![8 video streams processed real-time](./8VideosProcessed.png "8 video streams processed in real-time by a Jetson Nano with Deepstream and IoT Edge")
+![8 video streams processed real-time](./8VideosProcessedVLC.png "8 video streams processed in real-time by a Jetson Nano with Deepstream and IoT Edge")
 
 ## Going further
 
-### Learning more about Deepstream
+### Learning more about DeepStream
+
+A great learning resource to learn more about DeepStream is [this free online course by NVIDIA](https://courses.nvidia.com/courses/course-v1:DLI+C-IV-02+V1/info).
 
 Deesptream's SDK based on GStreamer. It is very modular with its concepts of plugins. Each plugins has `sinks` and `sources`. NVIDIA provides several plugins as part of Deepstream which are optimized to leverage NVIDIA's GPUs. How these plugins are connected with each others is defined in the application's  configuration file.
 
@@ -294,7 +343,7 @@ You can learn more about its architecture in [NVIDIA's official documentation](h
 
 ![NVIDIA Deepstream Application Architecture](./DeepstreamArchitecture.png "NVIDIA Deepstream Application Architecture - See NVIDIA's official documentation for more details")
 
-### Tips to edit your Deepstream application
+### Tips to edit your DeepStream application
 
 #### Make a quick configuration change
 
