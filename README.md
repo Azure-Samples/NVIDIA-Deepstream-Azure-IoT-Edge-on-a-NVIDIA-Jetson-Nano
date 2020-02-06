@@ -16,7 +16,7 @@ To complete this sample, you need a [NVIDIA Jetson Nano device](https://develope
 
 Check out [this video](https://www.youtube.com/watch?v=475nlIETSkw) to see this demo in action and understand how it was built:
 
-[![Deepstream On IoT Edge on Jetson Nano](./IoTShowVideo.png)](https://www.youtube.com/watch?v=475nlIETSkw)
+[![Deepstream On IoT Edge on Jetson Nano](./assets/IoTShowVideo.png)](https://www.youtube.com/watch?v=475nlIETSkw)
 
 ## Prerequisites
 
@@ -33,7 +33,7 @@ head -n 1 /etc/nv_tegra_release
 
 - **Connect your Jetson Nano to your developer's machine with the USB Device Mode**: we'll do that by plugging a micro-USB cable from your Jetson Nano to your developer's machine and using the USB Device Mode provided in NVIDIA's course base image. With this mode, you do not need to hook up a monitor directly to your Jetson Nano. Instead, boot your device and wait for 30 seconds then open yoru favorite browser, go to [http://192.168.55.1:8888](http://192.168.55.1:8888) and enter the password `dlinano` to get access to a command line on your Jetson Nano.
 
-![Jupyter Notebook](./JupyterNotebook.png "Jetson Nano controlled by a Jupyter Notebook via the USB Device Mode")
+![Jupyter Notebook](./assets/JupyterNotebook.png "Jetson Nano controlled by a Jupyter Notebook via the USB Device Mode")
 
 - **Connect your Jetson Nano to the internet**: Either use an ethernet connection, in which case you can skip this section or connect your device to WiFi using the above USB Device Mode terminal:
 
@@ -75,7 +75,7 @@ head -n 1 /etc/nv_tegra_release
 - **Install VS Code and its the IoT Edge extension on your developer's machine**: On your developer's machine, get [VS Code](https://code.visualstudio.com/) and its [IoT Edge extension](https://marketplace.visualstudio.com/items?itemName=vsciot-vscode.azure-iot-tools#overview). [Configure this extension with your IoT Hub](https://docs.microsoft.com/en-us/azure/iot-edge/how-to-deploy-modules-vscode#sign-in-to-access-your-iot-hub).
 - **Install VLC to view RTSP video streams**: On your developer's machine, [install VLC](https://www.videolan.org/vlc/index.html).
 
-![Jetson Nano](./JetsonNano.png "NVIDIA Jetson Nano device used to run Deepstream with IoT Edge")
+![Jetson Nano](./assets/JetsonNano.png "NVIDIA Jetson Nano device used to run Deepstream with IoT Edge")
 
 The next sections walks you step-by-step to deploy Deepstream on an IoT Edge device and update its configuration. It explains concepts along the way. If all you want is to see the 8 video streams being processed in parallel, you can jump right to the final demo by directly deploying the deployment manifest in this repo.
 
@@ -101,7 +101,7 @@ In VS Code, from your development machine:
     4. Select `Module from Azure Marketplace`.
     5. It opens a new tab with all IoT Edge module offers from the Azure Marketplace. Select the `Nvidia Deepstream SDK` one, select the NVIDIA DeapStream SDK 4.0.2 for Jetson plan and select the `latest` tag.
 
-![Deepsteam in Azure Marketplace](./DeepstreamInMarketplace.png "NVIDIA Deepstream in Azure Marketplace")
+![Deepsteam in Azure Marketplace](./assets/DeepstreamInMarketplace.png "NVIDIA Deepstream in Azure Marketplace")
 
 3. Deploy the solution to your device:
     1. `Generate IoT Edge Deployment Manifest` by right clicking on the deployment.nano.template.json file
@@ -114,7 +114,7 @@ In VS Code, from your development machine:
 
 After a little while, (enough time for IoT Edge to download and start DeepStream module which is 1.75GB and compile the AI model), you should be able to see messages sent by the Deepstream module to the cloud via the IoT Edge runtime in VS Code. These messages are the results of Deepstream processing a sample video and analyzing it with an sample AI model that detects people and cars in this video and sends a message for each object found.
 
-![Telemetry sent to IoT Hub](./Telemetry.png "Messages sent from Deepstream module to Azure IoT Hub via the IoT Edge runtime")
+![Telemetry sent to IoT Hub](./assets/Telemetry.png "Messages sent from Deepstream module to Azure IoT Hub via the IoT Edge runtime")
 
 ## View the processed videos
 
@@ -247,7 +247,7 @@ We'll now modify the configuration of the Deepstream application and the IoT Edg
 
 You should now see messages recevied by IoT Hub via in VS Code AND see the processed video on your screen.
 
-![Default Output of Deepstream](./4VideosProcessedVLC.png "Output of default Deepstream application running on IoT Edge")
+![Default Output of Deepstream](./assets/4VideosProcessedVLC.png "Output of default Deepstream application running on IoT Edge")
 
 ## Process and view 8 video streams (1080p 30fps)
 
@@ -329,7 +329,7 @@ We'll start by updating the batch-size to 8 instead of 4 (`primagy-gie` / `batch
 
 You should now see the 8 video streams being processed and displayed on your screen.
 
-![8 video streams processed real-time](./8VideosProcessedVLC.png "8 video streams processed in real-time by a Jetson Nano with Deepstream and IoT Edge")
+![8 video streams processed real-time](./assets/8VideosProcessedVLC.png "8 video streams processed in real-time by a Jetson Nano with Deepstream and IoT Edge")
 
 ## Going further
 
@@ -341,7 +341,7 @@ Deesptream's SDK based on GStreamer. It is very modular with its concepts of plu
 
 You can learn more about its architecture in [NVIDIA's official documentation](https://docs.nvidia.com/metropolis/Deepstream/dev-guide/index.html#page/DeepStream_Development_Guide%2FDeepstream_app_architecture.html) (sneak peak below).
 
-![NVIDIA Deepstream Application Architecture](./DeepstreamArchitecture.png "NVIDIA Deepstream Application Architecture - See NVIDIA's official documentation for more details")
+![NVIDIA Deepstream Application Architecture](./assets/DeepstreamArchitecture.png "NVIDIA Deepstream Application Architecture - See NVIDIA's official documentation for more details")
 
 ### Tips to edit your DeepStream application
 
