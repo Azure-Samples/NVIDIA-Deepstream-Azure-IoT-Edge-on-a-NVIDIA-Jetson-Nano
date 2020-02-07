@@ -1,0 +1,31 @@
+# Copyright (c) 2018 NVIDIA Corporation.  All rights reserved.
+#
+# NVIDIA Corporation and its licensors retain all intellectual property
+# and proprietary rights in and to this software, related documentation
+# and any modifications thereto.  Any use, reproduction, disclosure or
+# distribution of this software and related documentation without an express
+# license agreement from NVIDIA Corporation is strictly prohibited.
+
+[sensor0]
+enable=1
+type=Camera
+id=CAM-CANS-00
+location=45.293701447;-75.8303914499;48.1557479338
+description=Camera Sensor
+coordinate=5.2;10.;11.2
+
+[sensor1]
+enable=1
+type=Camera
+id=CAM-CAN-01
+location=46.293701447;-76.8303914499;49.1557479338
+description=Camera Sensor
+coordinate=6.2;11.1;12.2
+
+[sensor2]
+enable=1
+type=Camera
+id=CAM-CAN-02
+location=47.293701447;-77.8303914499;50.1557479338
+description=Camera Sensor
+coordinate=7.2;12.1;13.2
