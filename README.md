@@ -469,7 +469,7 @@ We are now visualizing the processing of 3 real time (e.g. 30fps 1080p) video st
 
 ![Azure IoT Central](./assets/IoTCentral.png "Azure IoT Central SaaS application")
 
-### Learning more about DeepStream
+### Learn more about DeepStream
 
 A great learning resource to learn more about DeepStream is [this free online course by NVIDIA](https://courses.nvidia.com/courses/course-v1:DLI+C-IV-02+V1/info).
 
