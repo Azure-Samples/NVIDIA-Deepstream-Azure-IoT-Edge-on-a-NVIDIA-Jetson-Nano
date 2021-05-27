@@ -3,7 +3,7 @@
   "modulesContent": {
     "$edgeAgent": {
       "properties.desired": {
-        "schemaVersion": "1.0",
+        "schemaVersion": "1.1",
         "runtime": {
           "type": "docker",
           "settings": {
@@ -16,7 +16,7 @@
           "edgeAgent": {
             "type": "docker",
             "settings": {
-              "image": "mcr.microsoft.com/azureiotedge-agent:1.0",
+              "image": "mcr.microsoft.com/azureiotedge-agent:1.2",
               "createOptions": {}
             }
           },
@@ -36,7 +36,7 @@
               }
             },
             "settings": {
-              "image": "mcr.microsoft.com/azureiotedge-hub:1.0",
+              "image": "mcr.microsoft.com/azureiotedge-hub:1.2",
               "createOptions": {
                 "HostConfig": {
                   "PortBindings": {
@@ -68,18 +68,9 @@
             "status": "running",
             "restartPolicy": "always",
             "settings": {
-              "image": "marketplace.azurecr.io/nvidia/deepstream-iot2-l4t:latest",
+              "image": "marketplace.azurecr.io/nvidia/deepstream51-l4t:latest",
               "createOptions": {
-                "Entrypoint": [
-                  "/usr/bin/deepstream-test5-app",
-                  "-c",
-                  "test5_config_file_src_infer_azure_iotedge_edited.txt",
-                  "-p",
-                  "1",
-                  "-m",
-                  "1"
-                ],
-                "ExposedPorts":{
+                "ExposedPorts": {
                   "8554/tcp": {}
                 },
                 "HostConfig": {
@@ -92,11 +83,17 @@
                     ]
                   },
                   "Binds": [
-                    "/var/deepstream/custom_configs/:/root/deepstream_sdk_v4.0.2_jetson/sources/apps/sample_apps/deepstream-test5/custom_configs/",
-                    "/var/deepstream/custom_streams/:/root/deepstream_sdk_v4.0.2_jetson/sources/apps/sample_apps/deepstream-test5/custom_streams/",
-                    "/var/deepstream/custom_models/:/root/deepstream_sdk_v4.0.2_jetson/sources/apps/sample_apps/deepstream-test5/custom_models/"]
-                  },
-                "WorkingDir": "/root/deepstream_sdk_v4.0.2_jetson/sources/apps/sample_apps/deepstream-test5/custom_configs/"
+                    "/var/deepstream/custom_configs/:/opt/nvidia/deepstream/deepstream-5.1/sources/apps/sample_apps/deepstream-test5/custom_configs/",
+                    "/var/deepstream/custom_streams/:/opt/nvidia/deepstream/deepstream-5.1/sources/apps/sample_apps/deepstream-test5/custom_streams/",
+                    "/var/deepstream/custom_models/:/opt/nvidia/deepstream/deepstream-5.1/sources/apps/sample_apps/deepstream-test5/custom_models/"
+                  ]
+                },
+                "WorkingDir": "/opt/nvidia/deepstream/deepstream-5.1/sources/apps/sample_apps/deepstream-test5/custom_configs/",
+                "Entrypoint": [
+                  "/usr/bin/deepstream-test5-app",
+                  "-c",
+                  "test5_config_file_src_infer_azure_iotedge_edited.txt"
+                ]
               }
             }
           }
@@ -105,7 +102,7 @@
     },
     "$edgeHub": {
       "properties.desired": {
-        "schemaVersion": "1.0",
+        "schemaVersion": "1.1",
         "routes": {
           "DeepstreamToIoTHub": "FROM /messages/modules/NVIDIADeepStreamSDK/outputs/* INTO $upstream"
         },
