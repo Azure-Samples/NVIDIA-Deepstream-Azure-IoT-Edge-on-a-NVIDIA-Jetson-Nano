@@ -287,7 +287,7 @@ We'll start by updating the batch-size to 8 instead of 4 (`primagy-gie` / `batch
 
     ```bash
     cd /var/deepstream
-    mkdir custom_streams
+    sudo mkdir custom_streams
     sudo chmod -R 777 /var/deepstream
     cd ./custom_streams
     ```
@@ -301,7 +301,7 @@ We'll start by updating the batch-size to 8 instead of 4 (`primagy-gie` / `batch
     - Un-compress the video files
 
     ```bash
-    tar -xzvf cars-streams.tar.gz
+    sudo tar -xzvf cars-streams.tar.gz
     ```
 
     - Mount these video streams by adding the following binding via the `HostConfig` node of Deepstream's  createOptions:
@@ -329,6 +329,7 @@ We'll start by updating the batch-size to 8 instead of 4 (`primagy-gie` / `batch
                         "value": false
                       }
                     }
+    }
     ```
 
 5. Deploy your updated IoT Edge solution:
