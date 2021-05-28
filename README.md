@@ -148,13 +148,13 @@ We'll now modify the configuration of the Deepstream application and the IoT Edg
 
         - Copy and save the content of the original Deepstream configuration file which you can find in this repo under `test5_config_file_src_infer_azure_iotedge.txt`
 
-        - Create and open a new file to configure how messages are sent:
+        - Create another configuration file specific to how messages are being sent (which is referenced in the above configuration file):
 
         ```bash
         nano dstest5_msgconv_sample_config.txt
         ```
 
-        - Copy and save the content of the original Deepstream configuration file which you can find in this repo under `dstest5_msgconv_sample_config.txt`
+        - Copy and save the content of the original messaging Deepstream configuration file which you can find in this repo under `dstest5_msgconv_sample_config.txt`
 
     4. Edit the configuration file:
         - Disable the first sink (FakeSink) and add a new RTSP sink with the following properties:
@@ -280,7 +280,7 @@ We'll start by updating the batch-size to 8 instead of 4 (`primagy-gie` / `batch
     - Open an ssh connection on your Nano device (password=`dlinano`):
 
     ```cmd
-    ssh dlinano@device-ip-address
+    ssh your-nano-username@your-nano-ip-address
     ```
 
     - Host these video files on your local disk
@@ -382,14 +382,14 @@ We've already collected training images for you. [Download this compressed folde
     - Open an ssh connection on your Nano device (password=`dlinano`):
     
         ```cmd
-        ssh dlinano@device-ip-address
+        ssh your-nano-username@your-nano-ip-address
         ```
     
     - Create a folder to store your custom model:
     
         ```bash
         cd /var/deepstream
-        mkdir custom_models
+        sudo mkdir custom_models
         sudo chmod -R 777 /var/deepstream
         cd ./custom_models
         ```
@@ -427,7 +427,7 @@ We've already collected training images for you. [Download this compressed folde
         - Copy the content of Deepstream's configuration file named `test5_config_file_src_infer_azure_iotedge_nano_custom_vision.txt` from this repo
         
         - Save and Quit (CTRL+O, CTRL+X)
-        - Create another configuration file specific to the inference enfine (which is referenced in the above configuration file):
+        - Create another configuration file specific to the inference engine (which is referenced in the above configuration file):
     
         ```bash
         nano config_infer_custom_vision.txt

@@ -1,10 +1,24 @@
-# Copyright (c) 2018 NVIDIA Corporation.  All rights reserved.
+################################################################################
+# Copyright (c) 2018-2020, NVIDIA CORPORATION. All rights reserved.
 #
-# NVIDIA Corporation and its licensors retain all intellectual property
-# and proprietary rights in and to this software, related documentation
-# and any modifications thereto.  Any use, reproduction, disclosure or
-# distribution of this software and related documentation without an express
-# license agreement from NVIDIA Corporation is strictly prohibited.
+# Permission is hereby granted, free of charge, to any person obtaining a
+# copy of this software and associated documentation files (the "Software"),
+# to deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+# THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+# DEALINGS IN THE SOFTWARE.
+################################################################################
 
 [application]
 enable-perf-measurement=1
@@ -100,25 +114,23 @@ nvbuf-memory-type=0
 [sink0]
 enable=0
 #Type - 1=FakeSink 2=EglSink 3=File
-type=2
+type=1
 sync=1
 source-id=0
 gpu-id=0
-qos=0
 nvbuf-memory-type=0
-overlay-id=1
 
 [sink1]
 enable=1
 #Type - 1=FakeSink 2=EglSink 3=File 4=UDPSink 5=nvoverlaysink 6=MsgConvBroker
 type=6
-msg-conv-config=../configs/dstest5_msgconv_sample_config.txt
+msg-conv-config=dstest5_msgconv_sample_config.txt
 #(0): PAYLOAD_DEEPSTREAM - Deepstream schema payload
 #(1): PAYLOAD_DEEPSTREAM_MINIMAL - Deepstream schema payload minimal
 #(256): PAYLOAD_RESERVED - Reserved type
 #(257): PAYLOAD_CUSTOM   - Custom schema payload
 msg-conv-payload-type=1
-msg-broker-proto-lib=/opt/nvidia/deepstream/deepstream-4.0/lib/libnvds_azure_edge_proto.so
+msg-broker-proto-lib=/opt/nvidia/deepstream/deepstream-5.1/lib/libnvds_azure_edge_proto.so
 topic=mytopic
 #Optional:
 #msg-broker-config=../../../../libs/azure_protocol_adaptor/module_client/cfg_azure.txt
@@ -143,11 +155,26 @@ type=4
 #1=h264 2=h265
 codec=1
 sync=0
-bitrate=1500000
+bitrate=4000000
 # set below properties in case of RTSPStreaming
 rtsp-port=8554
 udp-port=5400
 
+# sink type = 6 by default creates msg converter + broker.
+# To use multiple brokers use this group for converter and use
+# sink type = 6 with disable-msgconv = 1
+[message-converter]
+enable=0
+msg-conv-config=dstest5_msgconv_sample_config.txt
+#(0): PAYLOAD_DEEPSTREAM - Deepstream schema payload
+#(1): PAYLOAD_DEEPSTREAM_MINIMAL - Deepstream schema payload minimal
+#(256): PAYLOAD_RESERVED - Reserved type
+#(257): PAYLOAD_CUSTOM   - Custom schema payload
+msg-conv-payload-type=0
+# Name of library having custom implementation.
+#msg-conv-msg2p-lib=<val>
+# Id of component in case only selected message to parse.
+#msg-conv-comp-id=<val>
 
 [osd]
 enable=1
@@ -179,30 +206,32 @@ height=1080
 ##along with width, height properties
 enable-padding=0
 nvbuf-memory-type=0
+## If set to TRUE, system timestamp will be attached as ntp timestamp
+## If set to FALSE, ntp timestamp from rtspsrc, if available, will be attached
+# attach-sys-ts-as-ntp=1
 
 [primary-gie]
 enable=1
 gpu-id=0
-model-engine-file=../../../../../samples/models/Primary_Detector_Nano/resnet10.caffemodel_b8_fp16.engine
-labelfile-path=../../../../../samples/models/Primary_Detector_Nano/labels.txt
-config-file=../../../../../samples/configs/deepstream-app/config_infer_primary_nano.txt
-#infer-raw-output-dir=../../../../../samples/primary_detector_raw_output/
 batch-size=8
 ## 0=FP32, 1=INT8, 2=FP16 mode
 bbox-border-color0=1;0;0;1
 bbox-border-color1=0;1;1;1
 bbox-border-color2=0;1;1;1
 bbox-border-color3=0;1;0;1
+nvbuf-memory-type=0
 interval=4
 gie-unique-id=1
-nvbuf-memory-type=0
-
+model-engine-file=../../../../../samples/models/Primary_Detector/resnet10.caffemodel_b8_gpu0_int8.engine
+labelfile-path=../../../../../samples/models/Primary_Detector/labels.txt
+config-file=../../../../../samples/configs/deepstream-app/config_infer_primary_nano.txt
+#infer-raw-output-dir=../../../../../samples/primary_detector_raw_output/
 
 [tracker]
 enable=1
-tracker-width=480
-tracker-height=272
-ll-lib-file=/opt/nvidia/deepstream/deepstream-4.0/lib/libnvds_mot_klt.so
+tracker-width=600
+tracker-height=288
+ll-lib-file=/opt/nvidia/deepstream/deepstream-5.1/lib/libnvds_mot_klt.so
 #ll-config-file required for DCF/IOU only
 #ll-config-file=tracker_config.yml
 #ll-config-file=iou_config.txt
