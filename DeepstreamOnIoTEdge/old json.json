@@ -1,0 +1,39 @@
+          "NVIDIADeepStreamSDK": {
+            "version": "1.0",
+            "type": "docker",
+            "status": "running",
+            "restartPolicy": "always",
+            "settings": {
+              "image": "marketplace.azurecr.io/nvidia/deepstream-iot2-l4t:latest",
+              "createOptions": {
+                "Entrypoint": [
+                  "/usr/bin/deepstream-test5-app",
+                  "-c",
+                  "test5_config_file_src_infer_azure_iotedge_edited.txt",
+                  "-p",
+                  "1",
+                  "-m",
+                  "1"
+                ],
+                "ExposedPorts": {
+                  "8554/tcp": {}
+                },
+                "HostConfig": {
+                  "runtime": "nvidia",
+                  "PortBindings": {
+                    "8554/tcp": [
+                      {
+                        "HostPort": "8554"
+                      }
+                    ]
+                  },
+                  "Binds": [
+                    "/var/deepstream/custom_configs/:/root/deepstream_sdk_v4.0.2_jetson/sources/apps/sample_apps/deepstream-test5/custom_configs/",
+                    "/var/deepstream/custom_streams/:/root/deepstream_sdk_v4.0.2_jetson/sources/apps/sample_apps/deepstream-test5/custom_streams/",
+                    "/var/deepstream/custom_models/:/root/deepstream_sdk_v4.0.2_jetson/sources/apps/sample_apps/deepstream-test5/custom_models/"
+                  ]
+                },
+                "WorkingDir": "/root/deepstream_sdk_v4.0.2_jetson/sources/apps/sample_apps/deepstream-test5/custom_configs/"
+              }
+            }
+          },

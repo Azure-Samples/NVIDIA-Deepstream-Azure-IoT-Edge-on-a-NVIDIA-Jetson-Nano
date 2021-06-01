@@ -25,43 +25,43 @@ Check out [this video](https://www.youtube.com/watch?v=475nlIETSkw) to see this 
 
 ![Jetson Nano](./assets/JetsonNano.png "NVIDIA Jetson Nano device used to run Deepstream with IoT Edge")
 
-- **Flash your Jetson Nano SD Card**: download and flash either this [JetPack version 4.3 image](https://developer.nvidia.com/embedded/jetpack) if you have an HDMI screen or the [image from this NVIDIA course](https://courses.nvidia.com/courses/course-v1:DLI+C-IV-02+V1/info) otherwise (the course is a great free learning resource anyway). The image from the course is also based on JetPack 4.3 but includes an USB Device Mode to use the Jetson Nano without HDMI screen. For the rest of this tutorial will assume that you use the device in USB Device Mode. In any cases, you can use [BalenaEtcher](https://www.balena.io/etcher/) tool to flash your SD card. Both of these images are based on Ubuntu 18.04 and already includes NVIDIA drivers version, CUDA and Nvidia-Docker. 
+- **Flash your Jetson Nano SD Card**: download and flash either this [JetPack version 4.5 image](https://developer.nvidia.com/embedded/jetpack). You can use [BalenaEtcher](https://www.balena.io/etcher/) tool to flash your SD card. Both of these images are based on Ubuntu 18.04 and already includes NVIDIA drivers version, CUDA and Nvidia-Docker. 
 
 > [!WARNING]
-> This branch only works with DeepStream 4.0.2, which requires JetPack 4.3 (= Release 32, Revision 3). To use DeepStream 4.0.1 with JetPack 4.2, please look at the `ds-4.0.1` branch of this repo. To double check, your JetPack version, you can use the following command:
+> This branch only works with DeepStream 5.1, which requires JetPack 4.5 (= Release 32, Revision 3). To older versions, please look at other branches of this repo. To double check, your JetPack version, you can use the following command:
 
 
 ```bash
 head -n 1 /etc/nv_tegra_release
 ```
 
-- **Connect your Jetson Nano to your developer's machine with the USB Device Mode**: we'll do that by plugging a micro-USB cable from your Jetson Nano to your developer's machine and using the USB Device Mode provided in NVIDIA's course base image. With this mode, you do not need to hook up a monitor directly to your Jetson Nano. Instead, boot your device and wait for 30 seconds then open yoru favorite browser, go to [http://192.168.55.1:8888](http://192.168.55.1:8888) and enter the password `dlinano` to get access to a command line on your Jetson Nano.
+- **Connect your Jetson Nano to your developer's machine with the USB Headless Mode**: we'll do that by plugging a micro-USB cable from your Jetson Nano to your developer's machine and using the [USB Headless Mode](https://developer.nvidia.com/embedded/learn/get-started-jetson-nano-devkit#setup) provided by NVIDIA. With this mode, you do not need to hook up a monitor directly to your Jetson Nano. Instead, plug your Jetson Nano to your computer with a micro-USB cable, boot your Jetson Nano and allow 1 minute for your Jetson Nano to boot. From your computer, follow the instructiosn on NVIDIA's website to connect to your Jetson Nano over the serial port.
 
-![Jupyter Notebook](./assets/JupyterNotebook.png "Jetson Nano controlled by a Jupyter Notebook via the USB Device Mode")
+![Serial Console](assets/Getting_Started-Jetson_Nano_Developer_Kit-PuTTY-2.png)
 
-- **Connect your Jetson Nano to the internet**: Either use an ethernet connection, in which case you can skip this section or connect your device to WiFi using the above USB Device Mode terminal:
+- **Connect your Jetson Nano to the internet**: Either use an ethernet connection, in which case you can skip this section or connect your device to WiFi using the command line:
 
     To connect your Jetson to a WiFi network from a terminal, follow these steps
 
     1. Re-scan available WiFi networks
 
         ```bash
-        nmcli device wifi rescan
+        sudo nmcli device wifi rescan
         ```
 
     2. List available WiFi networks, and find the ``ssid_name`` of your network.
 
         ```bash
-        nmcli device wifi list
+        sudo nmcli device wifi list
         ```
 
     3. Connect to a selected WiFi network
 
         ```bash
-        nmcli device wifi connect <ssid_name> password <password>
+        sudo nmcli device wifi connect <ssid_name> password <password>
         ```
 
-- **Connect your Jetson Nano to an SSH client**: The USB Device Mode terminal is limited because it does not support copy/paste. So to make it easier to go through the steps of this sample, it is recommended to open an SSH connection with your favorite SSH Client. 
+- **Connect your Jetson Nano to an SSH client**: An SSH terminal is often more convenient than a serial terminal. So to make it easier to go through the steps of this sample, it is recommended to open an SSH connection with your favorite SSH Client. 
 
     1. Find your IP address using the USB Device Mode terminal
 
@@ -69,10 +69,10 @@ head -n 1 /etc/nv_tegra_release
         ifconfig
         ```
 
-    2. Make sure that your laptop is on the same network as yoru Jetson Nano device and open an SSH connection on your Jetson Device (password = `dlinano`):
+    2. Make sure that your laptop is on the same network as your Jetson Nano device and open an SSH connection on your Jetson Device:
 
         ```bash
-        ssh dlinano@your-ip-address
+        ssh your-username@your-ip-address
         ```
 
 - **Install IoT Edge**: See the [Azure IoT Edge installation instructions](https://docs.microsoft.com/en-us/azure/iot-edge/how-to-install-iot-edge-linux) for Ubuntu Server 18.04. Skip the Install Container Runtime section since we will be using nvidia-docker, which is already installed. Connect your device to your IoT Hub using the manual provisioning option. See this [quickstart](https://docs.microsoft.com/en-us/azure/iot-edge/quickstart-linux) if you don't yet have an Azure IoT Hub.
@@ -101,7 +101,7 @@ In VS Code, from your development machine:
     2. Select `Azure IoT Edge: Add IoT Edge module`
     3. Select the default deployment manifest (deployment.template.json)
     4. Select `Module from Azure Marketplace`.
-    5. It opens a new tab with all IoT Edge module offers from the Azure Marketplace. Select the `Nvidia Deepstream SDK` one, select the NVIDIA DeapStream SDK 4.0.2 for Jetson plan and select the `latest` tag.
+    5. It opens a new tab with all IoT Edge module offers from the Azure Marketplace. Select the `Nvidia Deepstream SDK` one, select the `NVIDIA DeapStream SDK 5.1 for ARM` plan and select the `latest` tag.
 
 ![Deepsteam in Azure Marketplace](./assets/DeepstreamInMarketplace.png "NVIDIA Deepstream in Azure Marketplace")
 
@@ -126,7 +126,7 @@ We'll now modify the configuration of the Deepstream application and the IoT Edg
     a. Open an SSH connection on your Nano device (for instance from VS Code terminal):
     
     ```cmd
-    ssh dlinano@your-nano-ip-address
+    ssh your-nano-username@your-nano-ip-address
     ```
 
     2. Create a new folder to host modified Deepstream config files
@@ -146,7 +146,15 @@ We'll now modify the configuration of the Deepstream application and the IoT Edg
         nano test5_config_file_src_infer_azure_iotedge_edited.txt
         ```
 
-        - Copy the content of the original Deepstream configuration file which you can find in this repo under `test5_config_file_src_infer_azure_iotedge.txt`
+        - Copy and save the content of the original Deepstream configuration file which you can find in this repo under `test5_config_file_src_infer_azure_iotedge.txt`
+
+        - Create another configuration file specific to how messages are being sent (which is referenced in the above configuration file):
+
+        ```bash
+        nano dstest5_msgconv_sample_config.txt
+        ```
+
+        - Copy and save the content of the original messaging Deepstream configuration file which you can find in this repo under `dstest5_msgconv_sample_config.txt`
 
     4. Edit the configuration file:
         - Disable the first sink (FakeSink) and add a new RTSP sink with the following properties:
@@ -200,14 +208,14 @@ We'll now modify the configuration of the Deepstream application and the IoT Edg
 
     ```json
     "HostConfig":{
-        "Binds": ["/var/deepstream/custom_configs:/root/deepstream_sdk_v4.0.2_jetson/sources/apps/sample_apps/deepstream-test5/custom_configs/"]
+        "Binds": ["/var/deepstream/custom_configs/:/opt/nvidia/deepstream/deepstream-5.1/sources/apps/sample_apps/deepstream-test5/custom_configs/"]
         }
     ```
 
     - Edit your Deepstream application working directory and entrypoint to use this updated config file via Deepstream createOptions:
     
     ```json
-    "WorkingDir": "/root/deepstream_sdk_v4.0.2_jetson/sources/apps/sample_apps/deepstream-test5/custom_configs/"
+    "WorkingDir": "/opt/nvidia/deepstream/deepstream-5.1/sources/apps/sample_apps/deepstream-test5/custom_configs/"
     ```
 
     ```json
@@ -272,7 +280,7 @@ We'll start by updating the batch-size to 8 instead of 4 (`primagy-gie` / `batch
     - Open an ssh connection on your Nano device (password=`dlinano`):
 
     ```cmd
-    ssh dlinano@device-ip-address
+    ssh your-nano-username@your-nano-ip-address
     ```
 
     - Host these video files on your local disk
@@ -321,6 +329,7 @@ We'll start by updating the batch-size to 8 instead of 4 (`primagy-gie` / `batch
                         "value": false
                       }
                     }
+    }
     ```
 
 5. Deploy your updated IoT Edge solution:
@@ -373,14 +382,14 @@ We've already collected training images for you. [Download this compressed folde
     - Open an ssh connection on your Nano device (password=`dlinano`):
     
         ```cmd
-        ssh dlinano@device-ip-address
+        ssh your-nano-username@your-nano-ip-address
         ```
     
     - Create a folder to store your custom model:
     
         ```bash
         cd /var/deepstream
-        mkdir custom_models
+        sudo mkdir custom_models
         sudo chmod -R 777 /var/deepstream
         cd ./custom_models
         ```
@@ -395,7 +404,7 @@ We've already collected training images for you. [Download this compressed folde
     - For DeepStream to understand how to parse the bounding boxes provided by a model from Custom Vision, we need to download an extra library:
     
         ```bash
-        wget -O libnvdsinfer_custom_impl_Yolo_Custom_Vision.so --no-check-certificate "https://onedrive.live.com/download?cid=0C0A4A69A0CDCB4C&resid=0C0A4A69A0CDCB4C%21588374&authkey=ADqq__XBNC06kI0"
+        wget -O libnvdsinfer_custom_impl_Yolo_Custom_Vision.so --no-check-certificate "https://onedrive.live.com/download?cid=0C0A4A69A0CDCB4C&resid=0C0A4A69A0CDCB4C%21595626&authkey=AC9Lfp4wuXSTFz4"
         ```
     
     - Download raw video streams that we'll use to simulate cameras
@@ -418,7 +427,7 @@ We've already collected training images for you. [Download this compressed folde
         - Copy the content of Deepstream's configuration file named `test5_config_file_src_infer_azure_iotedge_nano_custom_vision.txt` from this repo
         
         - Save and Quit (CTRL+O, CTRL+X)
-        - Create another configuration file specific to the inference enfine (which is referenced in the above configuration file):
+        - Create another configuration file specific to the inference engine (which is referenced in the above configuration file):
     
         ```bash
         nano config_infer_custom_vision.txt
@@ -440,9 +449,9 @@ We've already collected training images for you. [Download this compressed folde
 
 ```json
 "Binds": [
-        "/var/deepstream/custom_configs/:/root/deepstream_sdk_v4.0.2_jetson/sources/apps/sample_apps/deepstream-test5/custom_configs/",
-        "/var/deepstream/custom_streams/:/root/deepstream_sdk_v4.0.2_jetson/sources/apps/sample_apps/deepstream-test5/custom_streams/",
-        "/var/deepstream/custom_models/:/root/deepstream_sdk_v4.0.2_jetson/sources/apps/sample_apps/deepstream-test5/custom_models/"
+        "/var/deepstream/custom_configs/:/opt/nvidia/deepstream/deepstream-5.1/sources/apps/sample_apps/deepstream-test5/custom_configs/",
+        "/var/deepstream/custom_streams/:/opt/nvidia/deepstream/deepstream-5.1/sources/apps/sample_apps/deepstream-test5/custom_streams/",
+        "/var/deepstream/custom_models/:/opt/nvidia/deepstream/deepstream-5.1/sources/apps/sample_apps/deepstream-test5/custom_models/"
         ]
 ```
 
@@ -462,13 +471,6 @@ We are now visualizing the processing of 3 real time (e.g. 30fps 1080p) video st
 ![Custom Vision](./assets/sodaCansVLC.png "3 soda cans manufacturing lines are bieing monitored with a custom AI model built with Custom Vision")
 
 ## Going further
-
-### Build a SaaS application with Azure IoT Central
-
-[Check out this github repository](https://github.com/ebertrams/iotedge-iva-nano) to learn how to operate the same Edge solution at scale and build a dashboard and alerting solution in the cloud with [Azure IoT Central](https://azure.microsoft.com/en-us/services/iot-central/).
-
-![Azure IoT Central](./assets/IoTCentral.png "Azure IoT Central SaaS application")
-
 ### Learn more about DeepStream
 
 A great learning resource to learn more about DeepStream is [this free online course by NVIDIA](https://courses.nvidia.com/courses/course-v1:DLI+C-IV-02+V1/info).
