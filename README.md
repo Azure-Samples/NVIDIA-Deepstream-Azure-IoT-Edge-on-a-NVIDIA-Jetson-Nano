@@ -134,7 +134,7 @@ We'll now modify the configuration of the Deepstream application and the IoT Edg
     ```bash
     cd /var
     sudo mkdir deepstream
-    sudo mkdir ./deepstream/custom_configs
+    mkdir ./deepstream/custom_configs
     sudo chmod -R 777 /var/deepstream
     cd ./deepstream/custom_configs
     ```
@@ -287,7 +287,7 @@ We'll start by updating the batch-size to 8 instead of 4 (`primagy-gie` / `batch
 
     ```bash
     cd /var/deepstream
-    sudo mkdir custom_streams
+    mkdir custom_streams
     sudo chmod -R 777 /var/deepstream
     cd ./custom_streams
     ```
@@ -301,7 +301,7 @@ We'll start by updating the batch-size to 8 instead of 4 (`primagy-gie` / `batch
     - Un-compress the video files
 
     ```bash
-    sudo tar -xzvf cars-streams.tar.gz
+    tar -xzvf cars-streams.tar.gz
     ```
 
     - Mount these video streams by adding the following binding via the `HostConfig` node of Deepstream's  createOptions:
@@ -404,7 +404,7 @@ We've already collected training images for you. [Download this compressed folde
     - For DeepStream to understand how to parse the bounding boxes provided by a model from Custom Vision, we need to download an extra library:
     
         ```bash
-        wget -O libnvdsinfer_custom_impl_Yolo_Custom_Vision.so --no-check-certificate "https://onedrive.live.com/download?cid=0C0A4A69A0CDCB4C&resid=0C0A4A69A0CDCB4C%21588374&authkey=ADqq__XBNC06kI0"
+        wget -O libnvdsinfer_custom_impl_Yolo_Custom_Vision.so --no-check-certificate "https://onedrive.live.com/download?cid=0C0A4A69A0CDCB4C&resid=0C0A4A69A0CDCB4C%21595626&authkey=AC9Lfp4wuXSTFz4"
         ```
     
     - Download raw video streams that we'll use to simulate cameras
@@ -449,9 +449,9 @@ We've already collected training images for you. [Download this compressed folde
 
 ```json
 "Binds": [
-        "/var/deepstream/custom_configs/:/root/deepstream_sdk_v4.0.2_jetson/sources/apps/sample_apps/deepstream-test5/custom_configs/",
-        "/var/deepstream/custom_streams/:/root/deepstream_sdk_v4.0.2_jetson/sources/apps/sample_apps/deepstream-test5/custom_streams/",
-        "/var/deepstream/custom_models/:/root/deepstream_sdk_v4.0.2_jetson/sources/apps/sample_apps/deepstream-test5/custom_models/"
+        "/var/deepstream/custom_configs/:/opt/nvidia/deepstream/deepstream-5.1/sources/apps/sample_apps/deepstream-test5/custom_configs/",
+        "/var/deepstream/custom_streams/:/opt/nvidia/deepstream/deepstream-5.1/sources/apps/sample_apps/deepstream-test5/custom_streams/",
+        "/var/deepstream/custom_models/:/opt/nvidia/deepstream/deepstream-5.1/sources/apps/sample_apps/deepstream-test5/custom_models/"
         ]
 ```
 
@@ -471,13 +471,6 @@ We are now visualizing the processing of 3 real time (e.g. 30fps 1080p) video st
 ![Custom Vision](./assets/sodaCansVLC.png "3 soda cans manufacturing lines are bieing monitored with a custom AI model built with Custom Vision")
 
 ## Going further
-
-### Build a SaaS application with Azure IoT Central
-
-[Check out this github repository](https://github.com/ebertrams/iotedge-iva-nano) to learn how to operate the same Edge solution at scale and build a dashboard and alerting solution in the cloud with [Azure IoT Central](https://azure.microsoft.com/en-us/services/iot-central/).
-
-![Azure IoT Central](./assets/IoTCentral.png "Azure IoT Central SaaS application")
-
 ### Learn more about DeepStream
 
 A great learning resource to learn more about DeepStream is [this free online course by NVIDIA](https://courses.nvidia.com/courses/course-v1:DLI+C-IV-02+V1/info).
