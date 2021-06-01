@@ -106,7 +106,7 @@ In VS Code, from your development machine:
 ![Deepsteam in Azure Marketplace](./assets/DeepstreamInMarketplace.png "NVIDIA Deepstream in Azure Marketplace")
 
 3. Deploy the solution to your device:
-    1. `Generate IoT Edge Deployment Manifest` by right clicking on the deployment.nano.template.json file
+    1. `Generate IoT Edge Deployment Manifest` by right clicking on the deployment.template.json file
     2. `Create Deployment for Single Device` by right clicking on the generated file in the /config folder
     3. Select your IoT Edge device
 
